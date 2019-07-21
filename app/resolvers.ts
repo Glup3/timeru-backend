@@ -105,6 +105,21 @@ const resolvers = {
 
       return null;
     },
+    invalidateTokens: async (_: any, __: any, { req }: any): Promise<boolean> => {
+      if (!req.userId) {
+        return false;
+      }
+
+      const user = await User.findOne(req.userId);
+      if (!user) {
+        return false;
+      }
+
+      user.count += 1;
+      await user.save();
+
+      return true;
+    },
   },
 };
 
