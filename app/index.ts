@@ -6,8 +6,8 @@ import { verify } from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 
-import resolvers from './resolvers';
-import typeDefs from './typeDefs';
+import resolvers from '../graphql/resolvers/resolvers';
+import typeDefs from '../graphql/typedefs/typeDefs';
 import User from './entity/User';
 import { createTokens } from './auth';
 

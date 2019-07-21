@@ -1,11 +1,11 @@
 import * as bcrypt from 'bcryptjs';
 import * as yup from 'yup';
 
-import User from './entity/User';
-import ErrorType from './types/error';
-import formatYupError from './utils/formatYupError';
-import { createTokens, authenticated, validateRole } from './auth';
-import { ROLE_USER, ROLE_ADMIN } from './constants';
+import User from '../../app/entity/User';
+import ErrorType from '../../app/types/error';
+import formatYupError from '../../app/utils/formatYupError';
+import { createTokens, authenticated, validateRole } from '../../app/auth';
+import { ROLE_USER, ROLE_ADMIN } from '../../app/constants';
 
 const registerSchema = yup.object().shape({
   email: yup.string().email(),
