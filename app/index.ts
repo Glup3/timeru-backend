@@ -1,6 +1,23 @@
+import { ApolloServer, gql } from 'apollo-server-express';
+
 import express = require('express');
 
-const app: express.Application = express();
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
+
+const resolvers = {
+  Query: {
+    hello: (): string => 'Hello World!',
+  },
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
+
+const app = express();
+server.applyMiddleware({ app });
 
 app.get('/', (req, res): void => {
   res.send('Hello World!');

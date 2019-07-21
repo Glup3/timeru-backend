@@ -11,7 +11,9 @@
     "prod": "tsc && node ./build/index.js"
   },
   "dependencies": {
+    "apollo-server-express": "^2.7.0",
     "express": "^4.17.1",
+    "graphql": "^14.4.2",
     "ts-node-dev": "^1.0.0-pre.40"
   },
   "devDependencies": {
