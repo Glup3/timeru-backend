@@ -25,7 +25,7 @@ export const validateRole = (role: string): any => (next: any): any => (
   root: any,
   args: any,
   context: any,
-  info: any,
+  info: any
 ): any => {
   if (context.req.role !== role && context.req.role !== ROLE_ADMIN) {
     throw new Error('Unauthorized!');
