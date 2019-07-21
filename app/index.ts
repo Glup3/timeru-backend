@@ -1,6 +1,8 @@
-import { ApolloServer, gql } from 'apollo-server-express';
+import 'reflect-metadata';
 
-import express = require('express');
+import { ApolloServer, gql } from 'apollo-server-express';
+import { createConnection } from 'typeorm';
+import express from 'express';
 
 const typeDefs = gql`
   type Query {
@@ -23,6 +25,12 @@ app.get('/', (req, res): void => {
   res.send('Hello World!');
 });
 
-app.listen(4000, (): void => {
-  console.log('Express server is listening on port 4000!');
-});
+try {
+  createConnection().then((): void => {
+    app.listen(4000, (): void => {
+      console.log('Express server is listening on port 4000!');
+    });
+  });
+} catch (error) {
+  console.error('starting server', error);
+}
