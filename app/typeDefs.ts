@@ -4,6 +4,8 @@ const typeDefs = gql`
   type Query {
     hello: String
     me: User
+    ping: String
+    currentTime: String
   }
 
   type User {

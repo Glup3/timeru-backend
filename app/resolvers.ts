@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import User from './entity/User';
 import ErrorType from './types/error';
 import formatYupError from './utils/formatYupError';
-import createTokens from './auth';
+import { createTokens, authenticated } from './auth';
 
 const registerSchema = yup.object().shape({
   email: yup.string().email(),
@@ -20,13 +20,9 @@ const registerSchema = yup.object().shape({
 const resolvers = {
   Query: {
     hello: (): string => 'Hello World!',
-    me: (_: any, __: any, { req }: any): Promise<User> => {
-      if (!req.userId) {
-        return null;
-      }
-
-      return User.findOne(req.userId);
-    },
+    currentTime: (): string => new Date().toUTCString(),
+    ping: (): string => 'Pong',
+    me: authenticated((_: any, __: any, context: any): Promise<User> => User.findOne(context.userId)),
   },
   Mutation: {
     register: async (_: any, args: any): Promise<ErrorType[]> => {

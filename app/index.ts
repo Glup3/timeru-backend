@@ -9,7 +9,7 @@ import express from 'express';
 import resolvers from './resolvers';
 import typeDefs from './typeDefs';
 import User from './entity/User';
-import createTokens from './auth';
+import { createTokens } from './auth';
 
 require('dotenv').config();
 

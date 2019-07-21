@@ -1,7 +1,7 @@
 import { sign } from 'jsonwebtoken';
 import User from './entity/User';
 
-const createTokens = (user: User): { refreshToken: string; accessToken: string } => {
+export const createTokens = (user: User): { refreshToken: string; accessToken: string } => {
   const refreshToken = sign({ userId: user.id, count: user.count }, process.env.JWT_REFRESH_SECRET, {
     expiresIn: '7d',
   });
@@ -12,4 +12,10 @@ const createTokens = (user: User): { refreshToken: string; accessToken: string }
   return { refreshToken, accessToken };
 };
 
-export default createTokens;
+export const authenticated = (next: any): any => (root: any, args: any, context: any, info: any): any => {
+  if (!context.req.userId) {
+    throw new Error('Unauthenticated!');
+  }
+
+  return next(root, args, context, info);
+};
