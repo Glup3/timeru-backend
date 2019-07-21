@@ -1,11 +1,12 @@
 import * as bcrypt from 'bcryptjs';
 import * as yup from 'yup';
 
-import User from '../../app/entity/User';
-import ErrorType from '../../app/types/error';
-import formatYupError from '../../app/utils/formatYupError';
-import { createTokens, authenticated, validateRole } from '../../app/auth';
-import { ROLE_USER, ROLE_ADMIN } from '../../app/constants';
+import User from '../../entity/User';
+import ErrorType from '../../types/error';
+import formatYupError from '../../utils/formatYupError';
+import { createTokens, authenticated, validateRole } from '../../auth';
+import { ROLE_USER, ROLE_ADMIN } from '../../constants';
+import { MutationLoginArgs, MutationRegisterArgs } from '../graphql';
 
 const registerSchema = yup.object().shape({
   email: yup.string().email(),
@@ -21,12 +22,12 @@ const registerSchema = yup.object().shape({
 const resolvers = {
   Query: {
     hello: (): string => 'Hello World!',
-    currentTime: authenticated(validateRole(ROLE_USER)((_: any): string => new Date().toUTCString())),
-    ping: authenticated(validateRole(ROLE_ADMIN)((_: any): string => 'Pong')),
+    currentTime: authenticated(validateRole(ROLE_USER)((): string => new Date().toUTCString())),
+    ping: authenticated(validateRole(ROLE_ADMIN)((): string => 'Pong')),
     me: authenticated(async (_: any, __: any, { req }: any): Promise<User> => User.findOne(req.userId)),
   },
   Mutation: {
-    register: async (_: any, args: any): Promise<ErrorType[]> => {
+    register: async (_: any, args: MutationRegisterArgs): Promise<ErrorType[]> => {
       try {
         await registerSchema.validate(args, { abortEarly: false });
       } catch (error) {
@@ -77,7 +78,7 @@ const resolvers = {
 
       return null;
     },
-    login: async (_: any, { email, password }: any, { res }: any): Promise<ErrorType[]> => {
+    login: async (_: any, { email, password }: MutationLoginArgs, { res }: any): Promise<ErrorType[]> => {
       const user = await User.findOne({ where: { email } });
 
       const errorResponse = [

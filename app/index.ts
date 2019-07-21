@@ -6,8 +6,8 @@ import { verify } from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 
-import resolvers from '../graphql/resolvers/resolvers';
-import typeDefs from '../graphql/typedefs/typeDefs';
+import resolvers from './graphql/resolvers/resolvers';
+import typeDefs from './graphql/typedefs/typeDefs';
 import User from './entity/User';
 import { createTokens } from './auth';
 
@@ -60,7 +60,7 @@ app.use(
     req.userId = user.id;
 
     return next();
-  },
+  }
 );
 
 server.applyMiddleware({ app });
