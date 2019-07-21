@@ -70,6 +70,28 @@ const resolvers = {
 
       return null;
     },
+    login: async (_: any, { email, password }: any): Promise<ErrorType[]> => {
+      const user = await User.findOne({ where: { email } });
+
+      const errorResponse = [
+        {
+          path: 'email/password',
+          message: 'invalid email or password',
+        },
+      ];
+
+      if (!user) {
+        return errorResponse;
+      }
+
+      const validPassword = await bcrypt.compare(password, user.password);
+
+      if (!validPassword) {
+        return errorResponse;
+      }
+
+      return null;
+    },
   },
 };
 
