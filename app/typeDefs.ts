@@ -3,6 +3,14 @@ import { gql } from 'apollo-server-express';
 const typeDefs = gql`
   type Query {
     hello: String
+    me: User
+  }
+
+  type User {
+    username: String
+    firstName: String
+    lastName: String
+    email: String
   }
 
   type Error {

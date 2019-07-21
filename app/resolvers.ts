@@ -1,8 +1,10 @@
 import * as bcrypt from 'bcryptjs';
 import * as yup from 'yup';
+
 import User from './entity/User';
 import ErrorType from './types/error';
 import formatYupError from './utils/formatYupError';
+import createTokens from './auth';
 
 const registerSchema = yup.object().shape({
   email: yup.string().email(),
@@ -18,6 +20,13 @@ const registerSchema = yup.object().shape({
 const resolvers = {
   Query: {
     hello: (): string => 'Hello World!',
+    me: (_: any, __: any, { req }: any): Promise<User> => {
+      if (!req.userId) {
+        return null;
+      }
+
+      return User.findOne(req.userId);
+    },
   },
   Mutation: {
     register: async (_: any, args: any): Promise<ErrorType[]> => {
@@ -70,7 +79,7 @@ const resolvers = {
 
       return null;
     },
-    login: async (_: any, { email, password }: any): Promise<ErrorType[]> => {
+    login: async (_: any, { email, password }: any, { res }: any): Promise<ErrorType[]> => {
       const user = await User.findOne({ where: { email } });
 
       const errorResponse = [
@@ -85,10 +94,14 @@ const resolvers = {
       }
 
       const validPassword = await bcrypt.compare(password, user.password);
-
       if (!validPassword) {
         return errorResponse;
       }
+
+      const { refreshToken, accessToken } = createTokens(user);
+
+      res.cookie('refresh-token', refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 7 });
+      res.cookie('access-token', accessToken, { maxAge: 1000 * 60 * 15 });
 
       return null;
     },
