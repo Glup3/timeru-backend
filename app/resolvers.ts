@@ -1,12 +1,34 @@
 import * as bcrypt from 'bcryptjs';
+import * as yup from 'yup';
 import User from './entity/User';
+import ErrorType from './types/error';
+import formatYupError from './utils/formatYupError';
+
+const registerSchema = yup.object().shape({
+  email: yup.string().email(),
+  password: yup
+    .string()
+    .min(6)
+    .max(255),
+  firstName: yup.string(),
+  lastName: yup.string(),
+  username: yup.string().min(3),
+});
 
 const resolvers = {
   Query: {
     hello: (): string => 'Hello World!',
   },
   Mutation: {
-    register: async (_: any, { email, password, firstName, lastName }: any): Promise<[object]> => {
+    register: async (_: any, args: any): Promise<ErrorType[]> => {
+      try {
+        await registerSchema.validate(args, { abortEarly: false });
+      } catch (error) {
+        return formatYupError(error);
+      }
+
+      const { email, password, firstName, lastName, username } = args;
+
       const emailAlreadyExists = await User.findOne({
         where: { email },
         select: ['id'],
@@ -16,6 +38,20 @@ const resolvers = {
         return [
           {
             path: 'email',
+            message: 'already taken',
+          },
+        ];
+      }
+
+      const usernameAlreadyExists = await User.findOne({
+        where: { username },
+        select: ['id'],
+      });
+
+      if (usernameAlreadyExists) {
+        return [
+          {
+            path: 'username',
             message: 'already taken',
           },
         ];
