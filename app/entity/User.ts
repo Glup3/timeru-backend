@@ -4,6 +4,8 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 export default class User extends BaseEntity {
   @PrimaryGeneratedColumn() public id: number;
 
+  @Column('int', { default: 0 }) public count: number;
+
   @Column('varchar', { length: 255 }) public firstName: string;
 
   @Column('varchar', { length: 255 }) public lastName: string;
