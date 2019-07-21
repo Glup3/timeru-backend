@@ -31,6 +31,7 @@ app.use(
     try {
       const data: any = verify(accessToken, process.env.JWT_ACCESS_SECRET);
       req.userId = data.userId;
+      req.role = data.role;
       return next();
     } catch {} // eslint-disable-line no-empty
 
@@ -68,10 +69,12 @@ app.get('/', (req, res): void => {
   res.send('Hello World!');
 });
 
+const port = process.env.PORT || 4000;
+
 try {
   createConnection().then((): void => {
-    app.listen(4000, (): void => {
-      console.log('Express server is listening on port 4000!');
+    app.listen(port, (): void => {
+      console.log(`Express server is listening on port ${port}!`);
     });
   });
 } catch (error) {

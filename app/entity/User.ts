@@ -14,5 +14,7 @@ export default class User extends BaseEntity {
 
   @Column('varchar', { length: 255 }) public email: string;
 
+  @Column('varchar', { length: 255, default: 'USER' }) public role: string;
+
   @Column('text') public password: string;
 }
