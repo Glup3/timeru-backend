@@ -32,6 +32,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): [Error!]
     invalidateTokens: Boolean
     addCategory(title: String, icon: String, valuable: Boolean): Category
+    removeCategory(id: ID): Category
   }
 `;
 

@@ -15,3 +15,15 @@ export const addCategory = authenticated(
     return category;
   })
 );
+
+export const removeCategory = authenticated(
+  validateRole(ROLE_ADMIN)(async (_: any, { id }: any) => {
+    const category = await Category.findOne({ where: { id } });
+
+    if (!category) {
+      return new Error(`Category ID ${id} not found`);
+    }
+
+    return Category.remove(category);
+  })
+);
