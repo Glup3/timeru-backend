@@ -6,10 +6,10 @@ import { verify } from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 
-import resolvers from './resolvers';
-import typeDefs from './typeDefs';
+import resolvers from './graphql/resolvers/resolvers';
+import typeDefs from './graphql/typedefs/typeDefs';
 import User from './entity/User';
-import createTokens from './auth';
+import { createTokens } from './auth';
 
 require('dotenv').config();
 
@@ -31,6 +31,7 @@ app.use(
     try {
       const data: any = verify(accessToken, process.env.JWT_ACCESS_SECRET);
       req.userId = data.userId;
+      req.role = data.role;
       return next();
     } catch {} // eslint-disable-line no-empty
 
@@ -59,7 +60,7 @@ app.use(
     req.userId = user.id;
 
     return next();
-  },
+  }
 );
 
 server.applyMiddleware({ app });
@@ -68,10 +69,12 @@ app.get('/', (req, res): void => {
   res.send('Hello World!');
 });
 
+const port = process.env.PORT || 4000;
+
 try {
   createConnection().then((): void => {
-    app.listen(4000, (): void => {
-      console.log('Express server is listening on port 4000!');
+    app.listen(port, (): void => {
+      console.log(`Express server is listening on port ${port}!`);
     });
   });
 } catch (error) {

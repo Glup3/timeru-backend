@@ -8,6 +8,9 @@ module.exports = {
   ],
   rules: {
     'no-console': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'import/no-cycle': 'off',
+    'no-underscore-dangle': 'off',
     'prettier/prettier': 'error'
   },
   parserOptions: {
