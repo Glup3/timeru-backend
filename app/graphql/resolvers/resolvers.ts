@@ -8,6 +8,8 @@ import { createTokens, authenticated, validateRole } from '../../auth';
 import { ROLE_USER, ROLE_ADMIN } from '../../constants';
 import { MutationLoginArgs, MutationRegisterArgs } from '../graphql';
 
+import { addCategory } from './mutation/category';
+
 const registerSchema = yup.object().shape({
   email: yup.string().email(),
   password: yup
@@ -119,6 +121,7 @@ const resolvers = {
 
       return true;
     },
+    addCategory,
   },
 };
 
