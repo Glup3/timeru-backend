@@ -23,7 +23,7 @@ export const addCategory = authenticated(
     const response: CategoryMutationResponse = {
       code: '200',
       success: true,
-      message: 'Category got added',
+      message: `Category ${newCategory.id} added`,
       category: newCategory,
     };
 
@@ -32,41 +32,65 @@ export const addCategory = authenticated(
 );
 
 export const removeCategory = authenticated(
-  validateRole(ROLE_ADMIN)(async (_: any, { id }: MutationRemoveCategoryArgs) => {
-    const category = await Category.findOne({ where: { id } });
+  validateRole(ROLE_ADMIN)(
+    async (_: any, { id }: MutationRemoveCategoryArgs): Promise<CategoryMutationResponse> => {
+      const category = await Category.findOne({ where: { id } });
 
-    if (!category) {
-      return new Error(`Category ID ${id} not found`);
+      if (!category) {
+        return {
+          code: '404',
+          success: false,
+          message: `Category ${id} not found`,
+          category: null,
+        };
+      }
+
+      return {
+        code: '200',
+        success: true,
+        message: `Category ${id} deleted`,
+        category: await Category.remove(category),
+      };
     }
-
-    return Category.remove(category);
-  })
+  )
 );
 
 export const updateCategory = authenticated(
-  validateRole(ROLE_ADMIN)(async (_: any, { id, category }: MutationUpdateCategoryArgs) => {
-    const foundCategory = await Category.findOne({ where: { id } });
+  validateRole(ROLE_ADMIN)(
+    async (_: any, { id, category }: MutationUpdateCategoryArgs): Promise<CategoryMutationResponse> => {
+      const foundCategory = await Category.findOne({ where: { id } });
 
-    if (!foundCategory) {
-      return new Error(`Category ID ${id} not found`);
+      if (!foundCategory) {
+        return {
+          code: '404',
+          success: false,
+          message: `Category ${id} not found`,
+          category: null,
+        };
+      }
+
+      const { title, icon, valuable } = category;
+
+      if (title !== undefined) {
+        foundCategory.title = title;
+      }
+
+      if (icon !== undefined) {
+        foundCategory.icon = icon;
+      }
+
+      if (valuable !== undefined) {
+        foundCategory.valuable = valuable;
+      }
+
+      await foundCategory.save();
+
+      return {
+        code: '200',
+        success: true,
+        message: `Category ${id} updated`,
+        category: foundCategory,
+      };
     }
-
-    const { title, icon, valuable } = category;
-
-    if (title !== undefined) {
-      foundCategory.title = title;
-    }
-
-    if (icon !== undefined) {
-      foundCategory.icon = icon;
-    }
-
-    if (valuable !== undefined) {
-      foundCategory.valuable = valuable;
-    }
-
-    await foundCategory.save();
-
-    return foundCategory;
-  })
+  )
 );

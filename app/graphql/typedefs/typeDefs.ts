@@ -35,6 +35,20 @@ const typeDefs = gql`
     category: Category
   }
 
+  type RemoveCategoryMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    category: Category
+  }
+
+  type UpdateCategoryMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    category: Category
+  }
+
   input CategoryInput {
     title: String
     icon: String
@@ -51,8 +65,8 @@ const typeDefs = gql`
     login(email: String!, password: String!): [Error!]
     invalidateTokens: Boolean
     addCategory(category: CategoryInput): AddCategoryMutationResponse
-    removeCategory(id: ID): Category
-    updateCategory(id: ID!, category: CategoryInput): Category
+    removeCategory(id: ID!): RemoveCategoryMutationResponse
+    updateCategory(id: ID!, category: CategoryInput): UpdateCategoryMutationResponse
   }
 `;
 
