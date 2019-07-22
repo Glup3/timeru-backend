@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 'typeorm';
+import TimeEntry from './TimeEntry';
+import UserPermission from './UserPermission';
 
 @Entity('users')
 export default class User extends BaseEntity {
@@ -19,4 +21,10 @@ export default class User extends BaseEntity {
   @Column('boolean', { default: true }) public active: boolean;
 
   @Column('text') public password: string;
+
+  @OneToMany(type => TimeEntry, timeEntry => timeEntry.user)
+  public timeEntries: TimeEntry[];
+
+  @OneToMany(type => UserPermission, userPermission => userPermission.user)
+  public userPermissions: UserPermission[];
 }
