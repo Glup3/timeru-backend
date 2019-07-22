@@ -33,6 +33,7 @@ const typeDefs = gql`
     invalidateTokens: Boolean
     addCategory(title: String, icon: String, valuable: Boolean): Category
     removeCategory(id: ID): Category
+    updateCategory(id: ID!, title: String, icon: String, valuable: Boolean): Category
   }
 `;
 

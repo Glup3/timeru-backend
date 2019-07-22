@@ -17,6 +17,14 @@ export enum CacheControlScope {
   Private = 'PRIVATE',
 }
 
+export interface Category {
+  __typename?: 'Category';
+  id?: Maybe<Scalars['ID']>;
+  title?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  valuable?: Maybe<Scalars['Boolean']>;
+}
+
 export interface Error {
   __typename?: 'Error';
   path: Scalars['String'];
@@ -28,6 +36,9 @@ export interface Mutation {
   register?: Maybe<Error[]>;
   login?: Maybe<Error[]>;
   invalidateTokens?: Maybe<Scalars['Boolean']>;
+  addCategory?: Maybe<Category>;
+  removeCategory?: Maybe<Category>;
+  updateCategory?: Maybe<Category>;
 }
 
 export interface MutationRegisterArgs {
@@ -41,6 +52,23 @@ export interface MutationRegisterArgs {
 export interface MutationLoginArgs {
   email: Scalars['String'];
   password: Scalars['String'];
+}
+
+export interface MutationAddCategoryArgs {
+  title?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  valuable?: Maybe<Scalars['Boolean']>;
+}
+
+export interface MutationRemoveCategoryArgs {
+  id?: Maybe<Scalars['ID']>;
+}
+
+export interface MutationUpdateCategoryArgs {
+  id: Scalars['ID'];
+  title?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  valuable?: Maybe<Scalars['Boolean']>;
 }
 
 export interface Query {
@@ -124,6 +152,8 @@ export interface ResolversTypes {
   Mutation: ResolverTypeWrapper<{}>;
   Error: ResolverTypeWrapper<Error>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Category: ResolverTypeWrapper<Category>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -137,6 +167,8 @@ export interface ResolversParentTypes {
   Mutation: {};
   Error: Error;
   Boolean: Scalars['Boolean'];
+  Category: Category;
+  ID: Scalars['ID'];
   CacheControlScope: CacheControlScope;
   Upload: Scalars['Upload'];
   Int: Scalars['Int'];
@@ -149,6 +181,13 @@ export type CacheControlDirectiveResolver<
   Args = { maxAge?: Maybe<Maybe<Scalars['Int']>>; scope?: Maybe<Maybe<CacheControlScope>> }
 > = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export interface CategoryResolvers<ContextType = any, ParentType = ResolversParentTypes['Category']> {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  valuable?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+}
+
 export interface ErrorResolvers<ContextType = any, ParentType = ResolversParentTypes['Error']> {
   path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -158,6 +197,9 @@ export interface MutationResolvers<ContextType = any, ParentType = ResolversPare
   register?: Resolver<Maybe<ResolversTypes['Error'][]>, ParentType, ContextType, MutationRegisterArgs>;
   login?: Resolver<Maybe<ResolversTypes['Error'][]>, ParentType, ContextType, MutationLoginArgs>;
   invalidateTokens?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  addCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, MutationAddCategoryArgs>;
+  removeCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, MutationRemoveCategoryArgs>;
+  updateCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, MutationUpdateCategoryArgs>;
 }
 
 export interface QueryResolvers<ContextType = any, ParentType = ResolversParentTypes['Query']> {
@@ -179,6 +221,7 @@ export interface UserResolvers<ContextType = any, ParentType = ResolversParentTy
 }
 
 export interface Resolvers<ContextType = any> {
+  Category?: CategoryResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

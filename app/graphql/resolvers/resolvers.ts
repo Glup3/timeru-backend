@@ -2,7 +2,7 @@ import User from '../../entity/User';
 import { authenticated, validateRole } from '../../auth';
 import { ROLE_USER, ROLE_ADMIN } from '../../constants';
 
-import { addCategory, removeCategory } from './mutation/category';
+import { addCategory, removeCategory, updateCategory } from './mutation/category';
 import { register, login, invalidateTokens } from './mutation/authentication';
 
 const resolvers = {
@@ -18,6 +18,7 @@ const resolvers = {
     invalidateTokens,
     addCategory,
     removeCategory,
+    updateCategory,
   },
 };
 
