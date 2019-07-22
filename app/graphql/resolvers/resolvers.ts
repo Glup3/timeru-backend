@@ -20,6 +20,11 @@ const resolvers = {
     removeCategory,
     updateCategory,
   },
+  MutationResponse: {
+    __resolveType(): any {
+      return null;
+    },
+  },
 };
 
 export default resolvers;

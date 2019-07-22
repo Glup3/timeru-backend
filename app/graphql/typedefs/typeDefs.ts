@@ -22,6 +22,25 @@ const typeDefs = gql`
     valuable: Boolean
   }
 
+  interface MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+  }
+
+  type AddCategoryMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    category: Category
+  }
+
+  input CategoryInput {
+    title: String
+    icon: String
+    valuable: Boolean
+  }
+
   type Error {
     path: String!
     message: String!
@@ -31,9 +50,9 @@ const typeDefs = gql`
     register(email: String!, password: String!, firstName: String!, lastName: String!, username: String!): [Error!]
     login(email: String!, password: String!): [Error!]
     invalidateTokens: Boolean
-    addCategory(title: String, icon: String, valuable: Boolean): Category
+    addCategory(category: CategoryInput): AddCategoryMutationResponse
     removeCategory(id: ID): Category
-    updateCategory(id: ID!, title: String, icon: String, valuable: Boolean): Category
+    updateCategory(id: ID!, category: CategoryInput): Category
   }
 `;
 

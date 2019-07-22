@@ -1,19 +1,33 @@
 import { authenticated, validateRole } from '../../../auth';
 import { ROLE_USER, ROLE_ADMIN } from '../../../constants';
 import Category from '../../../entity/Category';
+import MutationResponseType from '../../../types/mutationResponse';
 import { MutationRemoveCategoryArgs, MutationAddCategoryArgs, MutationUpdateCategoryArgs } from '../../graphql';
 
+interface CategoryMutationResponse extends MutationResponseType {
+  category: Category;
+}
+
 export const addCategory = authenticated(
-  validateRole(ROLE_ADMIN)(async (_: any, { title, icon, valuable }: MutationAddCategoryArgs) => {
-    const category = Category.create({
+  validateRole(ROLE_ADMIN)(async (_: any, { category }: MutationAddCategoryArgs) => {
+    const { title, icon, valuable } = category;
+
+    const newCategory = Category.create({
       title,
       icon,
       valuable,
     });
 
-    await category.save();
+    await newCategory.save();
 
-    return category;
+    const response: CategoryMutationResponse = {
+      code: '200',
+      success: true,
+      message: 'Category got added',
+      category: newCategory,
+    };
+
+    return response;
   })
 );
 
@@ -30,27 +44,29 @@ export const removeCategory = authenticated(
 );
 
 export const updateCategory = authenticated(
-  validateRole(ROLE_ADMIN)(async (_: any, { id, title, icon, valuable }: MutationUpdateCategoryArgs) => {
-    const category = await Category.findOne({ where: { id } });
+  validateRole(ROLE_ADMIN)(async (_: any, { id, category }: MutationUpdateCategoryArgs) => {
+    const foundCategory = await Category.findOne({ where: { id } });
 
-    if (!category) {
+    if (!foundCategory) {
       return new Error(`Category ID ${id} not found`);
     }
 
+    const { title, icon, valuable } = category;
+
     if (title !== undefined) {
-      category.title = title;
+      foundCategory.title = title;
     }
 
     if (icon !== undefined) {
-      category.icon = icon;
+      foundCategory.icon = icon;
     }
 
     if (valuable !== undefined) {
-      category.valuable = valuable;
+      foundCategory.valuable = valuable;
     }
 
-    await category.save();
+    await foundCategory.save();
 
-    return category;
+    return foundCategory;
   })
 );
