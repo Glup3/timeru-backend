@@ -6,6 +6,11 @@ const permission = gql`
     title: String
   }
 
+  extend type Query {
+    getAllPermissions: [Permission]
+    getPermission(id: ID, title: String): Permission
+  }
+
   extend type Mutation {
     addPermission(permission: PermissionInput!): AddPermissionMutationResponse
     updatePermission(id: ID!, permission: PermissionInput!): UpdatePermissionMutationResponse

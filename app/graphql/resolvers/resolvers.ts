@@ -1,4 +1,5 @@
 import { getAllCategories, getCategory } from './query/category';
+import { getAllPermissions, getPermission } from './query/permission';
 
 import { me } from './mutation/user';
 import { addCategory, removeCategory, updateCategory } from './mutation/category';
@@ -10,6 +11,8 @@ const resolvers = {
     me,
     getAllCategories,
     getCategory,
+    getAllPermissions,
+    getPermission,
   },
   Mutation: {
     register,
