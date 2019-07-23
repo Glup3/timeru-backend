@@ -1,5 +1,7 @@
+import * as yup from 'yup';
+
 import { authenticated, validateRole } from '../../../auth';
-import { ROLE_USER, ROLE_ADMIN } from '../../../constants';
+import { ROLE_ADMIN } from '../../../constants';
 import Category from '../../../entity/Category';
 import MutationResponseType from '../../../types/mutationResponse';
 import { MutationRemoveCategoryArgs, MutationAddCategoryArgs, MutationUpdateCategoryArgs } from '../../graphql';
@@ -8,27 +10,44 @@ interface CategoryMutationResponse extends MutationResponseType {
   category: Category;
 }
 
+const addCategorySchema = yup.object().shape({
+  title: yup.string().required(),
+  icon: yup.string(),
+  valuable: yup.boolean(),
+});
+
 export const addCategory = authenticated(
-  validateRole(ROLE_ADMIN)(async (_: any, { category }: MutationAddCategoryArgs) => {
-    const { title, icon, valuable } = category;
+  validateRole(ROLE_ADMIN)(
+    async (_: any, { category }: MutationAddCategoryArgs): Promise<CategoryMutationResponse> => {
+      const { title, icon, valuable } = category;
 
-    const newCategory = Category.create({
-      title,
-      icon,
-      valuable,
-    });
+      try {
+        await addCategorySchema.validate(category, { abortEarly: false });
+      } catch (errors) {
+        return {
+          code: '400',
+          success: false,
+          message: errors.inner[0].message,
+          category: null,
+        };
+      }
 
-    await newCategory.save();
+      const newCategory = Category.create({
+        title,
+        icon,
+        valuable,
+      });
 
-    const response: CategoryMutationResponse = {
-      code: '200',
-      success: true,
-      message: `Category ${newCategory.id} added`,
-      category: newCategory,
-    };
+      await newCategory.save();
 
-    return response;
-  })
+      return {
+        code: '200',
+        success: true,
+        message: `Category ${newCategory.id} added`,
+        category: newCategory,
+      };
+    }
+  )
 );
 
 export const removeCategory = authenticated(

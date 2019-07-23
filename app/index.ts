@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 
 import resolvers from './graphql/resolvers/resolvers';
-import typeDefs from './graphql/typedefs/typeDefs';
+import typeDefs from './graphql/typedefs';
 import User from './entity/User';
 import { createTokens } from './auth';
 

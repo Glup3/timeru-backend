@@ -1,16 +1,18 @@
-import User from '../../entity/User';
-import { authenticated, validateRole } from '../../auth';
-import { ROLE_USER, ROLE_ADMIN } from '../../constants';
+import { getAllCategories, getCategory } from './query/category';
+import { getAllPermissions, getPermission } from './query/permission';
 
+import { me } from './mutation/user';
 import { addCategory, removeCategory, updateCategory } from './mutation/category';
+import { addPermission, updatePermission, removePermission } from './mutation/permission';
 import { register, login, invalidateTokens } from './mutation/authentication';
 
 const resolvers = {
   Query: {
-    hello: (): string => 'Hello World!',
-    currentTime: authenticated(validateRole(ROLE_USER)((): string => new Date().toUTCString())),
-    ping: authenticated(validateRole(ROLE_ADMIN)((): string => 'Pong')),
-    me: authenticated(async (_: any, __: any, { req }: any): Promise<User> => User.findOne(req.userId)),
+    me,
+    getAllCategories,
+    getCategory,
+    getAllPermissions,
+    getPermission,
   },
   Mutation: {
     register,
@@ -19,6 +21,9 @@ const resolvers = {
     addCategory,
     removeCategory,
     updateCategory,
+    addPermission,
+    updatePermission,
+    removePermission,
   },
   MutationResponse: {
     __resolveType(): any {
