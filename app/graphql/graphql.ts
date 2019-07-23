@@ -3,7 +3,7 @@ import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from '
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
-  ID: string;
+  ID: number;
   String: string;
   Boolean: boolean;
   Int: number;
@@ -93,6 +93,12 @@ export interface Query {
   me?: Maybe<User>;
   ping?: Maybe<Scalars['String']>;
   currentTime?: Maybe<Scalars['String']>;
+  getAllCategories?: Maybe<Maybe<Category>[]>;
+  getCategory?: Maybe<Category>;
+}
+
+export interface QueryGetCategoryArgs {
+  id?: Maybe<Scalars['ID']>;
 }
 
 export type RemoveCategoryMutationResponse = MutationResponse & {
@@ -181,14 +187,14 @@ export interface ResolversTypes {
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
+  Category: ResolverTypeWrapper<Category>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Mutation: ResolverTypeWrapper<{}>;
   Error: ResolverTypeWrapper<Error>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CategoryInput: CategoryInput;
   AddCategoryMutationResponse: ResolverTypeWrapper<AddCategoryMutationResponse>;
   MutationResponse: ResolverTypeWrapper<MutationResponse>;
-  Category: ResolverTypeWrapper<Category>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
   RemoveCategoryMutationResponse: ResolverTypeWrapper<RemoveCategoryMutationResponse>;
   UpdateCategoryMutationResponse: ResolverTypeWrapper<UpdateCategoryMutationResponse>;
   CacheControlScope: CacheControlScope;
@@ -201,14 +207,14 @@ export interface ResolversParentTypes {
   Query: {};
   String: Scalars['String'];
   User: User;
+  Category: Category;
+  ID: Scalars['ID'];
+  Boolean: Scalars['Boolean'];
   Mutation: {};
   Error: Error;
-  Boolean: Scalars['Boolean'];
   CategoryInput: CategoryInput;
   AddCategoryMutationResponse: AddCategoryMutationResponse;
   MutationResponse: MutationResponse;
-  Category: Category;
-  ID: Scalars['ID'];
   RemoveCategoryMutationResponse: RemoveCategoryMutationResponse;
   UpdateCategoryMutationResponse: UpdateCategoryMutationResponse;
   CacheControlScope: CacheControlScope;
@@ -285,6 +291,8 @@ export interface QueryResolvers<ContextType = any, ParentType = ResolversParentT
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   ping?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   currentTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  getAllCategories?: Resolver<Maybe<Maybe<ResolversTypes['Category']>[]>, ParentType, ContextType>;
+  getCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, QueryGetCategoryArgs>;
 }
 
 export interface RemoveCategoryMutationResponseResolvers<

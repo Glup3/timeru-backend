@@ -3,6 +3,7 @@ import { authenticated, validateRole } from '../../auth';
 import { ROLE_USER, ROLE_ADMIN } from '../../constants';
 
 import { addCategory, removeCategory, updateCategory } from './mutation/category';
+import { getAllCategories, getCategory } from './query/category';
 import { register, login, invalidateTokens } from './mutation/authentication';
 
 const resolvers = {
@@ -11,6 +12,8 @@ const resolvers = {
     currentTime: authenticated(validateRole(ROLE_USER)((): string => new Date().toUTCString())),
     ping: authenticated(validateRole(ROLE_ADMIN)((): string => 'Pong')),
     me: authenticated(async (_: any, __: any, { req }: any): Promise<User> => User.findOne(req.userId)),
+    getAllCategories,
+    getCategory,
   },
   Mutation: {
     register,

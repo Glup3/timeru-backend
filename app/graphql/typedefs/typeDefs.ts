@@ -6,6 +6,8 @@ const typeDefs = gql`
     me: User
     ping: String
     currentTime: String
+    getAllCategories: [Category]
+    getCategory(id: ID): Category
   }
 
   type User {
