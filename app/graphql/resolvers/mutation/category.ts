@@ -1,5 +1,5 @@
 import { authenticated, validateRole } from '../../../auth';
-import { ROLE_USER, ROLE_ADMIN } from '../../../constants';
+import { ROLE_ADMIN } from '../../../constants';
 import Category from '../../../entity/Category';
 import MutationResponseType from '../../../types/mutationResponse';
 import { MutationRemoveCategoryArgs, MutationAddCategoryArgs, MutationUpdateCategoryArgs } from '../../graphql';

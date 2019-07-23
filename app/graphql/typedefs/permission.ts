@@ -2,13 +2,14 @@ import { gql } from 'apollo-server-express';
 
 const permission = gql`
   type Permission {
-    id: ID!
+    id: ID
     title: String
   }
 
   extend type Mutation {
     addPermission(permission: PermissionInput!): AddPermissionMutationResponse
     updatePermission(id: ID!, permission: PermissionInput!): UpdatePermissionMutationResponse
+    removePermission(id: ID!): RemovePermissionMutationResponse
   }
 
   type AddPermissionMutationResponse implements MutationResponse {
@@ -19,6 +20,13 @@ const permission = gql`
   }
 
   type UpdatePermissionMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    permission: Permission
+  }
+
+  type RemovePermissionMutationResponse implements MutationResponse {
     code: String!
     success: Boolean!
     message: String!
