@@ -11,12 +11,12 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    register(credentials: CredentialsInput!, personalInfo: PersonalInfoInput!): [RegisterMutationResponse!]
-    login(credentials: CredentialsInput!): LoginMutationResponse!
+    register(credentials: CredentialsInput!, personalInfo: PersonalInfoInput!): [RegisterMutationResponse]
+    login(credentials: CredentialsInput!): LoginMutationResponse
     invalidateTokens: Boolean
-    addCategory(category: CategoryInput!): AddCategoryMutationResponse!
-    removeCategory(id: ID!): RemoveCategoryMutationResponse!
-    updateCategory(id: ID!, category: CategoryInput!): UpdateCategoryMutationResponse!
+    addCategory(category: CategoryInput!): AddCategoryMutationResponse
+    removeCategory(id: ID!): RemoveCategoryMutationResponse
+    updateCategory(id: ID!, category: CategoryInput!): UpdateCategoryMutationResponse
   }
 
   type User {
