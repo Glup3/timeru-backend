@@ -39,16 +39,17 @@ export interface CategoryInput {
   valuable?: Maybe<Scalars['Boolean']>;
 }
 
-export interface Error {
-  __typename?: 'Error';
-  path: Scalars['String'];
+export type LoginMutationResponse = MutationResponse & {
+  __typename?: 'LoginMutationResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
   message: Scalars['String'];
-}
+};
 
 export interface Mutation {
   __typename?: 'Mutation';
-  register?: Maybe<Error[]>;
-  login?: Maybe<Error[]>;
+  register?: Maybe<Maybe<RegisterMutationResponse>[]>;
+  login?: Maybe<LoginMutationResponse>;
   invalidateTokens?: Maybe<Scalars['Boolean']>;
   addCategory?: Maybe<AddCategoryMutationResponse>;
   removeCategory?: Maybe<RemoveCategoryMutationResponse>;
@@ -100,6 +101,13 @@ export interface Query {
 export interface QueryGetCategoryArgs {
   id?: Maybe<Scalars['ID']>;
 }
+
+export type RegisterMutationResponse = MutationResponse & {
+  __typename?: 'RegisterMutationResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+};
 
 export type RemoveCategoryMutationResponse = MutationResponse & {
   __typename?: 'RemoveCategoryMutationResponse';
@@ -191,10 +199,11 @@ export interface ResolversTypes {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Mutation: ResolverTypeWrapper<{}>;
-  Error: ResolverTypeWrapper<Error>;
+  RegisterMutationResponse: ResolverTypeWrapper<RegisterMutationResponse>;
+  MutationResponse: ResolverTypeWrapper<MutationResponse>;
+  LoginMutationResponse: ResolverTypeWrapper<LoginMutationResponse>;
   CategoryInput: CategoryInput;
   AddCategoryMutationResponse: ResolverTypeWrapper<AddCategoryMutationResponse>;
-  MutationResponse: ResolverTypeWrapper<MutationResponse>;
   RemoveCategoryMutationResponse: ResolverTypeWrapper<RemoveCategoryMutationResponse>;
   UpdateCategoryMutationResponse: ResolverTypeWrapper<UpdateCategoryMutationResponse>;
   CacheControlScope: CacheControlScope;
@@ -211,10 +220,11 @@ export interface ResolversParentTypes {
   ID: Scalars['ID'];
   Boolean: Scalars['Boolean'];
   Mutation: {};
-  Error: Error;
+  RegisterMutationResponse: RegisterMutationResponse;
+  MutationResponse: MutationResponse;
+  LoginMutationResponse: LoginMutationResponse;
   CategoryInput: CategoryInput;
   AddCategoryMutationResponse: AddCategoryMutationResponse;
-  MutationResponse: MutationResponse;
   RemoveCategoryMutationResponse: RemoveCategoryMutationResponse;
   UpdateCategoryMutationResponse: UpdateCategoryMutationResponse;
   CacheControlScope: CacheControlScope;
@@ -246,14 +256,23 @@ export interface CategoryResolvers<ContextType = any, ParentType = ResolversPare
   valuable?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
 }
 
-export interface ErrorResolvers<ContextType = any, ParentType = ResolversParentTypes['Error']> {
-  path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export interface LoginMutationResponseResolvers<
+  ContextType = any,
+  ParentType = ResolversParentTypes['LoginMutationResponse']
+> {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 }
 
 export interface MutationResolvers<ContextType = any, ParentType = ResolversParentTypes['Mutation']> {
-  register?: Resolver<Maybe<ResolversTypes['Error'][]>, ParentType, ContextType, MutationRegisterArgs>;
-  login?: Resolver<Maybe<ResolversTypes['Error'][]>, ParentType, ContextType, MutationLoginArgs>;
+  register?: Resolver<
+    Maybe<Maybe<ResolversTypes['RegisterMutationResponse']>[]>,
+    ParentType,
+    ContextType,
+    MutationRegisterArgs
+  >;
+  login?: Resolver<Maybe<ResolversTypes['LoginMutationResponse']>, ParentType, ContextType, MutationLoginArgs>;
   invalidateTokens?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   addCategory?: Resolver<
     Maybe<ResolversTypes['AddCategoryMutationResponse']>,
@@ -277,7 +296,11 @@ export interface MutationResolvers<ContextType = any, ParentType = ResolversPare
 
 export interface MutationResponseResolvers<ContextType = any, ParentType = ResolversParentTypes['MutationResponse']> {
   __resolveType: TypeResolveFn<
-    'AddCategoryMutationResponse' | 'RemoveCategoryMutationResponse' | 'UpdateCategoryMutationResponse',
+    | 'RegisterMutationResponse'
+    | 'LoginMutationResponse'
+    | 'AddCategoryMutationResponse'
+    | 'RemoveCategoryMutationResponse'
+    | 'UpdateCategoryMutationResponse',
     ParentType,
     ContextType
   >;
@@ -293,6 +316,15 @@ export interface QueryResolvers<ContextType = any, ParentType = ResolversParentT
   currentTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   getAllCategories?: Resolver<Maybe<Maybe<ResolversTypes['Category']>[]>, ParentType, ContextType>;
   getCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, QueryGetCategoryArgs>;
+}
+
+export interface RegisterMutationResponseResolvers<
+  ContextType = any,
+  ParentType = ResolversParentTypes['RegisterMutationResponse']
+> {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 }
 
 export interface RemoveCategoryMutationResponseResolvers<
@@ -329,10 +361,11 @@ export interface UserResolvers<ContextType = any, ParentType = ResolversParentTy
 export interface Resolvers<ContextType = any> {
   AddCategoryMutationResponse?: AddCategoryMutationResponseResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
-  Error?: ErrorResolvers<ContextType>;
+  LoginMutationResponse?: LoginMutationResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   MutationResponse?: MutationResponseResolvers;
   Query?: QueryResolvers<ContextType>;
+  RegisterMutationResponse?: RegisterMutationResponseResolvers<ContextType>;
   RemoveCategoryMutationResponse?: RemoveCategoryMutationResponseResolvers<ContextType>;
   UpdateCategoryMutationResponse?: UpdateCategoryMutationResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;

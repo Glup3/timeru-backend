@@ -2,7 +2,6 @@ import * as bcrypt from 'bcryptjs';
 import * as yup from 'yup';
 
 import User from '../../../entity/User';
-import ErrorType from '../../../types/error';
 import formatYupError from '../../../utils/formatYupError';
 import MutationResponse from '../../../types/mutationResponse';
 import { createTokens } from '../../../auth';
@@ -19,14 +18,15 @@ const registerSchema = yup.object().shape({
   username: yup.string().min(3),
 });
 
-export const register = async (_: any, args: MutationRegisterArgs): Promise<ErrorType[]> => {
+export const register = async (_: any, args: MutationRegisterArgs): Promise<MutationResponse[]> => {
+  const { email, password, firstName, lastName, username } = args;
+  const errors: MutationResponse[] = [];
+
   try {
     await registerSchema.validate(args, { abortEarly: false });
   } catch (error) {
-    return formatYupError(error);
+    errors.push(...formatYupError(error));
   }
-
-  const { email, password, firstName, lastName, username } = args;
 
   const emailAlreadyExists = await User.findOne({
     where: { email },
@@ -34,12 +34,11 @@ export const register = async (_: any, args: MutationRegisterArgs): Promise<Erro
   });
 
   if (emailAlreadyExists) {
-    return [
-      {
-        path: 'email',
-        message: 'already taken',
-      },
-    ];
+    errors.push({
+      code: '400',
+      message: 'email is already taken',
+      success: false,
+    });
   }
 
   const usernameAlreadyExists = await User.findOne({
@@ -48,12 +47,15 @@ export const register = async (_: any, args: MutationRegisterArgs): Promise<Erro
   });
 
   if (usernameAlreadyExists) {
-    return [
-      {
-        path: 'username',
-        message: 'already taken',
-      },
-    ];
+    errors.push({
+      code: '400',
+      message: 'username is already taken',
+      success: false,
+    });
+  }
+
+  if (errors.length > 0) {
+    return errors;
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -68,7 +70,13 @@ export const register = async (_: any, args: MutationRegisterArgs): Promise<Erro
 
   await user.save();
 
-  return null;
+  return [
+    {
+      code: '200',
+      message: 'successfully registered',
+      success: true,
+    },
+  ];
 };
 
 export const login = async (

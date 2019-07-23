@@ -10,6 +10,21 @@ const typeDefs = gql`
     getCategory(id: ID): Category
   }
 
+  type Mutation {
+    register(
+      email: String!
+      password: String!
+      firstName: String!
+      lastName: String!
+      username: String!
+    ): [RegisterMutationResponse]
+    login(email: String!, password: String!): LoginMutationResponse
+    invalidateTokens: Boolean
+    addCategory(category: CategoryInput): AddCategoryMutationResponse
+    removeCategory(id: ID!): RemoveCategoryMutationResponse
+    updateCategory(id: ID!, category: CategoryInput): UpdateCategoryMutationResponse
+  }
+
   type User {
     username: String
     firstName: String
@@ -31,6 +46,12 @@ const typeDefs = gql`
   }
 
   type LoginMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+  }
+
+  type RegisterMutationResponse implements MutationResponse {
     code: String!
     success: Boolean!
     message: String!
@@ -61,20 +82,6 @@ const typeDefs = gql`
     title: String
     icon: String
     valuable: Boolean
-  }
-
-  type Error {
-    path: String!
-    message: String!
-  }
-
-  type Mutation {
-    register(email: String!, password: String!, firstName: String!, lastName: String!, username: String!): [Error!]
-    login(email: String!, password: String!): LoginMutationResponse
-    invalidateTokens: Boolean
-    addCategory(category: CategoryInput): AddCategoryMutationResponse
-    removeCategory(id: ID!): RemoveCategoryMutationResponse
-    updateCategory(id: ID!, category: CategoryInput): UpdateCategoryMutationResponse
   }
 `;
 

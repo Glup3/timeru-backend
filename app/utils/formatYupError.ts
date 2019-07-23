@@ -1,13 +1,14 @@
 import { ValidationError } from 'yup';
-import ErrorType from '../types/error';
+import MutationResponse from '../types/mutationResponse';
 
-const formatYupError = (error: ValidationError): ErrorType[] => {
-  const errors: ErrorType[] = [];
+const formatYupError = (error: ValidationError): MutationResponse[] => {
+  const errors: MutationResponse[] = [];
 
   error.inner.forEach((e): void => {
     errors.push({
-      path: e.path,
+      code: '400',
       message: e.message,
+      success: false,
     });
   });
 
