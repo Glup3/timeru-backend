@@ -8,9 +8,17 @@ const permission = gql`
 
   extend type Mutation {
     addPermission(permission: PermissionInput!): AddPermissionMutationResponse
+    updatePermission(id: ID!, permission: PermissionInput!): UpdatePermissionMutationResponse
   }
 
   type AddPermissionMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    permission: Permission
+  }
+
+  type UpdatePermissionMutationResponse implements MutationResponse {
     code: String!
     success: Boolean!
     message: String!

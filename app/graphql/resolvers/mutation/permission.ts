@@ -28,4 +28,34 @@ export const addPermission = authenticated(
   )
 );
 
-export const updatePermission = () => null;
+export const updatePermission = authenticated(
+  validateRole(ROLE_ADMIN)(
+    async (_: any, { id, permission }: any): Promise<PermissionMutationResponse> => {
+      const foundPermission = await Permission.findOne({ where: { id } });
+
+      if (!foundPermission) {
+        return {
+          code: '404',
+          success: false,
+          message: `Permission ${id} not found`,
+          permission: null,
+        };
+      }
+
+      const { title } = permission;
+
+      if (title !== undefined) {
+        foundPermission.title = title;
+      }
+
+      await foundPermission.save();
+
+      return {
+        code: '200',
+        success: true,
+        message: `Permission ${foundPermission.id} updated`,
+        permission: foundPermission,
+      };
+    }
+  )
+);
