@@ -7,26 +7,52 @@ import MutationResponse from '../../../types/mutationResponse';
 import { createTokens } from '../../../auth';
 import { MutationLoginArgs, MutationRegisterArgs } from '../../graphql';
 
-const registerSchema = yup.object().shape({
-  email: yup.string().email(),
-  password: yup
+const registerPersonalInfoSchema = yup.object().shape({
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
+  username: yup
     .string()
-    .min(6)
-    .max(255),
-  firstName: yup.string(),
-  lastName: yup.string(),
-  username: yup.string().min(3),
+    .required()
+    .min(3),
 });
 
-export const register = async (_: any, args: MutationRegisterArgs): Promise<MutationResponse[]> => {
-  const { email, password, firstName, lastName, username } = args;
-  const errors: MutationResponse[] = [];
+const registerCredentialsSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required()
+    .email(),
+  password: yup
+    .string()
+    .required()
+    .min(6)
+    .max(255),
+});
+
+export const register = async (
+  _: any,
+  { credentials, personalInfo }: MutationRegisterArgs
+): Promise<MutationResponse[]> => {
+  const { email, password } = credentials;
+  const { firstName, lastName, username } = personalInfo;
+  const yupErrors: MutationResponse[] = [];
 
   try {
-    await registerSchema.validate(args, { abortEarly: false });
-  } catch (error) {
-    errors.push(...formatYupError(error));
+    await registerCredentialsSchema.validate(credentials, { abortEarly: false });
+  } catch (errors) {
+    yupErrors.push(...formatYupError(errors));
   }
+
+  try {
+    await registerPersonalInfoSchema.validate(personalInfo, { abortEarly: false });
+  } catch (errors) {
+    yupErrors.push(...formatYupError(errors));
+  }
+
+  if (yupErrors.length > 0) {
+    return yupErrors;
+  }
+
+  const errors: MutationResponse[] = [];
 
   const emailAlreadyExists = await User.findOne({
     where: { email },
@@ -79,11 +105,9 @@ export const register = async (_: any, args: MutationRegisterArgs): Promise<Muta
   ];
 };
 
-export const login = async (
-  _: any,
-  { email, password }: MutationLoginArgs,
-  { res }: any
-): Promise<MutationResponse> => {
+export const login = async (_: any, { credentials }: MutationLoginArgs, { res }: any): Promise<MutationResponse> => {
+  const { email, password } = credentials;
+
   const user = await User.findOne({ where: { email } });
 
   const errorResponse: MutationResponse = {

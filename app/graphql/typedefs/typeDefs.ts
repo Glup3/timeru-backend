@@ -11,18 +11,12 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    register(
-      email: String!
-      password: String!
-      firstName: String!
-      lastName: String!
-      username: String!
-    ): [RegisterMutationResponse]
-    login(email: String!, password: String!): LoginMutationResponse
+    register(credentials: CredentialsInput!, personalInfo: PersonalInfoInput!): [RegisterMutationResponse]
+    login(credentials: CredentialsInput!): LoginMutationResponse
     invalidateTokens: Boolean
-    addCategory(category: CategoryInput): AddCategoryMutationResponse
+    addCategory(category: CategoryInput!): AddCategoryMutationResponse
     removeCategory(id: ID!): RemoveCategoryMutationResponse
-    updateCategory(id: ID!, category: CategoryInput): UpdateCategoryMutationResponse
+    updateCategory(id: ID!, category: CategoryInput!): UpdateCategoryMutationResponse
   }
 
   type User {
@@ -82,6 +76,17 @@ const typeDefs = gql`
     title: String
     icon: String
     valuable: Boolean
+  }
+
+  input CredentialsInput {
+    email: String!
+    password: String!
+  }
+
+  input PersonalInfoInput {
+    firstName: String
+    lastName: String
+    username: String
   }
 `;
 

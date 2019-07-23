@@ -39,6 +39,11 @@ export interface CategoryInput {
   valuable?: Maybe<Scalars['Boolean']>;
 }
 
+export interface CredentialsInput {
+  email: Scalars['String'];
+  password: Scalars['String'];
+}
+
 export type LoginMutationResponse = MutationResponse & {
   __typename?: 'LoginMutationResponse';
   code: Scalars['String'];
@@ -57,20 +62,16 @@ export interface Mutation {
 }
 
 export interface MutationRegisterArgs {
-  email: Scalars['String'];
-  password: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  username: Scalars['String'];
+  credentials: CredentialsInput;
+  personalInfo: PersonalInfoInput;
 }
 
 export interface MutationLoginArgs {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  credentials: CredentialsInput;
 }
 
 export interface MutationAddCategoryArgs {
-  category?: Maybe<CategoryInput>;
+  category: CategoryInput;
 }
 
 export interface MutationRemoveCategoryArgs {
@@ -79,13 +80,19 @@ export interface MutationRemoveCategoryArgs {
 
 export interface MutationUpdateCategoryArgs {
   id: Scalars['ID'];
-  category?: Maybe<CategoryInput>;
+  category: CategoryInput;
 }
 
 export interface MutationResponse {
   code: Scalars['String'];
   success: Scalars['Boolean'];
   message: Scalars['String'];
+}
+
+export interface PersonalInfoInput {
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
 }
 
 export interface Query {
@@ -199,6 +206,8 @@ export interface ResolversTypes {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Mutation: ResolverTypeWrapper<{}>;
+  CredentialsInput: CredentialsInput;
+  PersonalInfoInput: PersonalInfoInput;
   RegisterMutationResponse: ResolverTypeWrapper<RegisterMutationResponse>;
   MutationResponse: ResolverTypeWrapper<MutationResponse>;
   LoginMutationResponse: ResolverTypeWrapper<LoginMutationResponse>;
@@ -220,6 +229,8 @@ export interface ResolversParentTypes {
   ID: Scalars['ID'];
   Boolean: Scalars['Boolean'];
   Mutation: {};
+  CredentialsInput: CredentialsInput;
+  PersonalInfoInput: PersonalInfoInput;
   RegisterMutationResponse: RegisterMutationResponse;
   MutationResponse: MutationResponse;
   LoginMutationResponse: LoginMutationResponse;
