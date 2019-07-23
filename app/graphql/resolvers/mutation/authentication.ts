@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import User from '../../../entity/User';
 import ErrorType from '../../../types/error';
 import formatYupError from '../../../utils/formatYupError';
+import MutationResponse from '../../../types/mutationResponse';
 import { createTokens } from '../../../auth';
 import { MutationLoginArgs, MutationRegisterArgs } from '../../graphql';
 
@@ -70,15 +71,18 @@ export const register = async (_: any, args: MutationRegisterArgs): Promise<Erro
   return null;
 };
 
-export const login = async (_: any, { email, password }: MutationLoginArgs, { res }: any): Promise<ErrorType[]> => {
+export const login = async (
+  _: any,
+  { email, password }: MutationLoginArgs,
+  { res }: any
+): Promise<MutationResponse> => {
   const user = await User.findOne({ where: { email } });
 
-  const errorResponse = [
-    {
-      path: 'email/password',
-      message: 'invalid email or password',
-    },
-  ];
+  const errorResponse: MutationResponse = {
+    code: '400',
+    message: 'invalid email or password',
+    success: false,
+  };
 
   if (!user) {
     return errorResponse;
@@ -89,12 +93,24 @@ export const login = async (_: any, { email, password }: MutationLoginArgs, { re
     return errorResponse;
   }
 
+  if (!user.active) {
+    return {
+      code: '400',
+      success: false,
+      message: 'user account disabled',
+    };
+  }
+
   const { refreshToken, accessToken } = createTokens(user);
 
   res.cookie('refresh-token', refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 7 });
   res.cookie('access-token', accessToken, { maxAge: 1000 * 60 * 15 });
 
-  return null;
+  return {
+    code: '200',
+    message: 'successfully logged in',
+    success: true,
+  };
 };
 
 // TODO create another for Admin, invalid Tokens for other Users

@@ -30,6 +30,12 @@ const typeDefs = gql`
     message: String!
   }
 
+  type LoginMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+  }
+
   type AddCategoryMutationResponse implements MutationResponse {
     code: String!
     success: Boolean!
@@ -64,7 +70,7 @@ const typeDefs = gql`
 
   type Mutation {
     register(email: String!, password: String!, firstName: String!, lastName: String!, username: String!): [Error!]
-    login(email: String!, password: String!): [Error!]
+    login(email: String!, password: String!): LoginMutationResponse
     invalidateTokens: Boolean
     addCategory(category: CategoryInput): AddCategoryMutationResponse
     removeCategory(id: ID!): RemoveCategoryMutationResponse
