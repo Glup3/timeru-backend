@@ -5,7 +5,7 @@ import UserPermission from './UserPermission';
 export default class Permission extends BaseEntity {
   @PrimaryGeneratedColumn() public id: number;
 
-  @Column('varchar') public title: string;
+  @Column('varchar', { unique: true }) public title: string;
 
   @OneToMany(type => UserPermission, userPermission => userPermission.permission)
   public userPermissions: Permission[];

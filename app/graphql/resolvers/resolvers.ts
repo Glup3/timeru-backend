@@ -2,6 +2,7 @@ import { getAllCategories, getCategory } from './query/category';
 
 import { me } from './mutation/user';
 import { addCategory, removeCategory, updateCategory } from './mutation/category';
+import { addPermission } from './mutation/permission';
 import { register, login, invalidateTokens } from './mutation/authentication';
 
 const resolvers = {
@@ -17,6 +18,7 @@ const resolvers = {
     addCategory,
     removeCategory,
     updateCategory,
+    addPermission,
   },
   MutationResponse: {
     __resolveType(): any {
