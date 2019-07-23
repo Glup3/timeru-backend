@@ -7,9 +7,9 @@ export default class Category extends BaseEntity {
 
   @Column('varchar') public title: string;
 
-  @Column('varchar') public icon: string;
+  @Column('varchar', { default: 'default' }) public icon: string;
 
-  @Column('boolean') public valuable: boolean;
+  @Column('boolean', { default: false }) public valuable: boolean;
 
   @OneToMany(type => TimeEntry, timeEntry => timeEntry.category)
   public timeEntries: TimeEntry[];

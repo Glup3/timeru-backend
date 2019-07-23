@@ -1,3 +1,5 @@
+import * as yup from 'yup';
+
 import { authenticated, validateRole } from '../../../auth';
 import { ROLE_ADMIN } from '../../../constants';
 import MutationResponseType from '../../../types/mutationResponse';
@@ -8,10 +10,25 @@ interface PermissionMutationResponse extends MutationResponseType {
   permission: Permission;
 }
 
+const addPermissionSchema = yup.object().shape({
+  title: yup.string().required(),
+});
+
 export const addPermission = authenticated(
   validateRole(ROLE_ADMIN)(
     async (_: any, { permission }: MutationAddPermissionArgs): Promise<PermissionMutationResponse> => {
       const { title } = permission;
+
+      try {
+        await addPermissionSchema.validate(permission, { abortEarly: false });
+      } catch (errors) {
+        return {
+          code: '400',
+          success: false,
+          message: errors.inner[0].message,
+          permission: null,
+        };
+      }
 
       const newPermission = Permission.create({
         title,
