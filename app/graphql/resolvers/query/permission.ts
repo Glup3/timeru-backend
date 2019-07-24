@@ -11,7 +11,7 @@ export const permissions = authenticated(
 export const permission = authenticated(
   validateRole(ROLE_ADMIN)((_: any, { id, title }: any) => {
     if (!id && !title) {
-      throw new Error('oof');
+      throw new Error('id or title required');
     }
 
     if (id) {
