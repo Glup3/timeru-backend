@@ -6,6 +6,7 @@ import { addCategory, removeCategory, updateCategory } from './mutation/category
 import { addPermission, updatePermission, removePermission } from './mutation/permission';
 import { addProject } from './mutation/project';
 import { register, login, invalidateTokens } from './mutation/authentication';
+import { addUserPermission } from './mutation/userPermission';
 
 const resolvers = {
   Query: {
@@ -27,6 +28,7 @@ const resolvers = {
     removePermission,
     updateUser,
     addProject,
+    addUserPermission,
   },
   MutationResponse: {
     __resolveType(): any {
