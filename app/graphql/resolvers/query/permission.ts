@@ -2,13 +2,13 @@ import Permission from '../../../entity/Permission';
 import { ROLE_ADMIN } from '../../../constants';
 import { validateRole, authenticated } from '../../../auth';
 
-export const getAllPermissions = authenticated(
+export const permissions = authenticated(
   validateRole(ROLE_ADMIN)(() => {
     return Permission.find();
   })
 );
 
-export const getPermission = authenticated(
+export const permission = authenticated(
   validateRole(ROLE_ADMIN)((_: any, { id, title }: any) => {
     if (!id && !title) {
       throw new Error('oof');

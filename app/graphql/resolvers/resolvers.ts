@@ -1,5 +1,5 @@
-import { getAllCategories, getCategory } from './query/category';
-import { getAllPermissions, getPermission } from './query/permission';
+import { categories, category } from './query/category';
+import { permissions, permission } from './query/permission';
 
 import { me } from './mutation/user';
 import { addCategory, removeCategory, updateCategory } from './mutation/category';
@@ -9,10 +9,10 @@ import { register, login, invalidateTokens } from './mutation/authentication';
 const resolvers = {
   Query: {
     me,
-    getAllCategories,
-    getCategory,
-    getAllPermissions,
-    getPermission,
+    categories,
+    category,
+    permissions,
+    permission,
   },
   Mutation: {
     register,

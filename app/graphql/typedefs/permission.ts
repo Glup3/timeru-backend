@@ -7,8 +7,8 @@ const permission = gql`
   }
 
   extend type Query {
-    getAllPermissions: [Permission]
-    getPermission(id: ID, title: String): Permission
+    permissions: [Permission]
+    permission(id: ID, title: String): Permission
   }
 
   extend type Mutation {
