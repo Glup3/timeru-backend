@@ -6,13 +6,13 @@ import UserPermission from './UserPermission';
 export default class Project extends BaseEntity {
   @PrimaryGeneratedColumn() public id: number;
 
-  @Column('varchar') public title: string;
+  @Column('varchar', { length: 60 }) public title: string;
 
-  @Column('varchar') public description: string;
+  @Column('varchar', { length: 255 }) public description: string;
 
-  @Column('varchar') public color: string;
+  @Column('varchar', { length: 7 }) public color: string;
 
-  @Column('varchar') public codename: string;
+  @Column('varchar', { length: 30, unique: true, nullable: false }) public codename: string;
 
   @OneToMany(type => TimeEntry, timeEntry => timeEntry.project)
   public timeEntries: TimeEntry[];
