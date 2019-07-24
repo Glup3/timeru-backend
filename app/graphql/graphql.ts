@@ -68,6 +68,7 @@ export interface Mutation {
   addCategory?: Maybe<AddCategoryMutationResponse>;
   removeCategory?: Maybe<RemoveCategoryMutationResponse>;
   updateCategory?: Maybe<UpdateCategoryMutationResponse>;
+  updateUser?: Maybe<UpdateUserMutationResponse>;
   addPermission?: Maybe<AddPermissionMutationResponse>;
   updatePermission?: Maybe<UpdatePermissionMutationResponse>;
   removePermission?: Maybe<RemovePermissionMutationResponse>;
@@ -93,6 +94,11 @@ export interface MutationRemoveCategoryArgs {
 export interface MutationUpdateCategoryArgs {
   id: Scalars['ID'];
   category: CategoryInput;
+}
+
+export interface MutationUpdateUserArgs {
+  id: Scalars['ID'];
+  user: UserInput;
 }
 
 export interface MutationAddPermissionArgs {
@@ -134,12 +140,19 @@ export interface Query {
   __typename?: 'Query';
   root?: Maybe<Scalars['String']>;
   me?: Maybe<User>;
-  getAllCategories?: Maybe<Maybe<Category>[]>;
-  getCategory?: Maybe<Category>;
+  categories?: Maybe<Maybe<Category>[]>;
+  category?: Maybe<Category>;
+  permissions?: Maybe<Maybe<Permission>[]>;
+  permission?: Maybe<Permission>;
 }
 
-export interface QueryGetCategoryArgs {
+export interface QueryCategoryArgs {
   id?: Maybe<Scalars['ID']>;
+}
+
+export interface QueryPermissionArgs {
+  id?: Maybe<Scalars['ID']>;
+  title?: Maybe<Scalars['String']>;
 }
 
 export type RegisterMutationResponse = MutationResponse & {
@@ -181,12 +194,29 @@ export type UpdatePermissionMutationResponse = MutationResponse & {
   permission?: Maybe<Permission>;
 };
 
+export type UpdateUserMutationResponse = MutationResponse & {
+  __typename?: 'UpdateUserMutationResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  user?: Maybe<User>;
+};
+
 export interface User {
   __typename?: 'User';
   username?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
+  role?: Maybe<Scalars['String']>;
+  active?: Maybe<Scalars['Boolean']>;
+}
+
+export interface UserInput {
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  active?: Maybe<Scalars['Boolean']>;
+  role?: Maybe<Scalars['String']>;
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -251,9 +281,10 @@ export interface ResolversTypes {
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Permission: ResolverTypeWrapper<Permission>;
   Mutation: ResolverTypeWrapper<{}>;
   CredentialsInput: CredentialsInput;
   PersonalInfoInput: PersonalInfoInput;
@@ -264,9 +295,10 @@ export interface ResolversTypes {
   AddCategoryMutationResponse: ResolverTypeWrapper<AddCategoryMutationResponse>;
   RemoveCategoryMutationResponse: ResolverTypeWrapper<RemoveCategoryMutationResponse>;
   UpdateCategoryMutationResponse: ResolverTypeWrapper<UpdateCategoryMutationResponse>;
+  UserInput: UserInput;
+  UpdateUserMutationResponse: ResolverTypeWrapper<UpdateUserMutationResponse>;
   PermissionInput: PermissionInput;
   AddPermissionMutationResponse: ResolverTypeWrapper<AddPermissionMutationResponse>;
-  Permission: ResolverTypeWrapper<Permission>;
   UpdatePermissionMutationResponse: ResolverTypeWrapper<UpdatePermissionMutationResponse>;
   RemovePermissionMutationResponse: ResolverTypeWrapper<RemovePermissionMutationResponse>;
   CacheControlScope: CacheControlScope;
@@ -279,9 +311,10 @@ export interface ResolversParentTypes {
   Query: {};
   String: Scalars['String'];
   User: User;
+  Boolean: Scalars['Boolean'];
   Category: Category;
   ID: Scalars['ID'];
-  Boolean: Scalars['Boolean'];
+  Permission: Permission;
   Mutation: {};
   CredentialsInput: CredentialsInput;
   PersonalInfoInput: PersonalInfoInput;
@@ -292,9 +325,10 @@ export interface ResolversParentTypes {
   AddCategoryMutationResponse: AddCategoryMutationResponse;
   RemoveCategoryMutationResponse: RemoveCategoryMutationResponse;
   UpdateCategoryMutationResponse: UpdateCategoryMutationResponse;
+  UserInput: UserInput;
+  UpdateUserMutationResponse: UpdateUserMutationResponse;
   PermissionInput: PermissionInput;
   AddPermissionMutationResponse: AddPermissionMutationResponse;
-  Permission: Permission;
   UpdatePermissionMutationResponse: UpdatePermissionMutationResponse;
   RemovePermissionMutationResponse: RemovePermissionMutationResponse;
   CacheControlScope: CacheControlScope;
@@ -373,6 +407,12 @@ export interface MutationResolvers<ContextType = any, ParentType = ResolversPare
     ContextType,
     MutationUpdateCategoryArgs
   >;
+  updateUser?: Resolver<
+    Maybe<ResolversTypes['UpdateUserMutationResponse']>,
+    ParentType,
+    ContextType,
+    MutationUpdateUserArgs
+  >;
   addPermission?: Resolver<
     Maybe<ResolversTypes['AddPermissionMutationResponse']>,
     ParentType,
@@ -400,6 +440,7 @@ export interface MutationResponseResolvers<ContextType = any, ParentType = Resol
     | 'AddCategoryMutationResponse'
     | 'RemoveCategoryMutationResponse'
     | 'UpdateCategoryMutationResponse'
+    | 'UpdateUserMutationResponse'
     | 'AddPermissionMutationResponse'
     | 'UpdatePermissionMutationResponse'
     | 'RemovePermissionMutationResponse',
@@ -419,8 +460,10 @@ export interface PermissionResolvers<ContextType = any, ParentType = ResolversPa
 export interface QueryResolvers<ContextType = any, ParentType = ResolversParentTypes['Query']> {
   root?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  getAllCategories?: Resolver<Maybe<Maybe<ResolversTypes['Category']>[]>, ParentType, ContextType>;
-  getCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, QueryGetCategoryArgs>;
+  categories?: Resolver<Maybe<Maybe<ResolversTypes['Category']>[]>, ParentType, ContextType>;
+  category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, QueryCategoryArgs>;
+  permissions?: Resolver<Maybe<Maybe<ResolversTypes['Permission']>[]>, ParentType, ContextType>;
+  permission?: Resolver<Maybe<ResolversTypes['Permission']>, ParentType, ContextType, QueryPermissionArgs>;
 }
 
 export interface RegisterMutationResponseResolvers<
@@ -472,6 +515,16 @@ export interface UpdatePermissionMutationResponseResolvers<
   permission?: Resolver<Maybe<ResolversTypes['Permission']>, ParentType, ContextType>;
 }
 
+export interface UpdateUserMutationResponseResolvers<
+  ContextType = any,
+  ParentType = ResolversParentTypes['UpdateUserMutationResponse']
+> {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+}
+
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
   name: 'Upload';
 }
@@ -481,6 +534,8 @@ export interface UserResolvers<ContextType = any, ParentType = ResolversParentTy
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  role?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  active?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
 }
 
 export interface Resolvers<ContextType = any> {
@@ -497,6 +552,7 @@ export interface Resolvers<ContextType = any> {
   RemovePermissionMutationResponse?: RemovePermissionMutationResponseResolvers<ContextType>;
   UpdateCategoryMutationResponse?: UpdateCategoryMutationResponseResolvers<ContextType>;
   UpdatePermissionMutationResponse?: UpdatePermissionMutationResponseResolvers<ContextType>;
+  UpdateUserMutationResponse?: UpdateUserMutationResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 }

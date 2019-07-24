@@ -8,13 +8,13 @@ export default class User extends BaseEntity {
 
   @Column('int', { default: 0 }) public count: number;
 
-  @Column('varchar', { length: 255 }) public username: string;
+  @Column('varchar', { length: 255, unique: true }) public username: string;
 
   @Column('varchar', { length: 255 }) public firstName: string;
 
   @Column('varchar', { length: 255 }) public lastName: string;
 
-  @Column('varchar', { length: 255 }) public email: string;
+  @Column('varchar', { length: 255, unique: true }) public email: string;
 
   @Column('varchar', { length: 255, default: 'USER' }) public role: string;
 
