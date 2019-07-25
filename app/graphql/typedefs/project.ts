@@ -11,9 +11,17 @@ const project = gql`
 
   extend type Mutation {
     addProject(project: ProjectInput!): AddProjectMutationResponse
+    updateProject(id: ID!, project: ProjectInput!): UpdateProjectMutationResponse
   }
 
   type AddProjectMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    project: Project
+  }
+
+  type UpdateProjectMutationResponse implements MutationResponse {
     code: String!
     success: Boolean!
     message: String!

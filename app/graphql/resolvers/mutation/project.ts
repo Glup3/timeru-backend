@@ -59,12 +59,43 @@ export const addProject = authenticated(
 
 export const updateProject = authenticated(
   validateRole(ROLE_ADMIN)(
-    async (_: any, { project }: any): Promise<ProjectMutationResponse> => {
+    async (_: any, { id, project }: any): Promise<ProjectMutationResponse> => {
+      const foundProject = await Project.findOne({ where: { id } });
+
+      if (!foundProject) {
+        return {
+          code: '404',
+          success: false,
+          message: `Project ${id} not found`,
+          project: null,
+        };
+      }
+
+      const { title, description, color, codename } = project;
+
+      if (title !== undefined) {
+        foundProject.title = title;
+      }
+
+      if (description !== undefined) {
+        foundProject.description = description;
+      }
+
+      if (color !== undefined) {
+        foundProject.color = color;
+      }
+
+      if (codename !== undefined) {
+        foundProject.codename = codename;
+      }
+
+      await foundProject.save();
+
       return {
         code: '200',
         success: true,
-        message: `Project updated`,
-        project: null,
+        message: `Project ${foundProject.codename} updated`,
+        project: foundProject,
       };
     }
   )
