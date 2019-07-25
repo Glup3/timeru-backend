@@ -4,6 +4,7 @@ import { authenticated, validateRole } from '../../../auth';
 import { ROLE_ADMIN } from '../../../constants';
 import Project from '../../../entity/Project';
 import MutationResponseType from '../../../types/mutationResponse';
+import { MutationRemoveProjectArgs, MutationUpdateProjectArgs, MutationAddProjectArgs } from '../../graphql';
 
 interface ProjectMutationResponse extends MutationResponseType {
   project: Project;
@@ -24,7 +25,7 @@ const addProjectSchema = yup.object().shape({
 
 export const addProject = authenticated(
   validateRole(ROLE_ADMIN)(
-    async (_: any, { project }: any): Promise<ProjectMutationResponse> => {
+    async (_: any, { project }: MutationAddProjectArgs): Promise<ProjectMutationResponse> => {
       const { title, description, color, codename } = project;
 
       try {
@@ -59,7 +60,7 @@ export const addProject = authenticated(
 
 export const updateProject = authenticated(
   validateRole(ROLE_ADMIN)(
-    async (_: any, { id, project }: any): Promise<ProjectMutationResponse> => {
+    async (_: any, { id, project }: MutationUpdateProjectArgs): Promise<ProjectMutationResponse> => {
       const foundProject = await Project.findOne({ where: { id } });
 
       if (!foundProject) {
@@ -96,6 +97,30 @@ export const updateProject = authenticated(
         success: true,
         message: `Project ${foundProject.codename} updated`,
         project: foundProject,
+      };
+    }
+  )
+);
+
+export const removeProject = authenticated(
+  validateRole(ROLE_ADMIN)(
+    async (_: any, { id }: MutationRemoveProjectArgs): Promise<ProjectMutationResponse> => {
+      const project = await Project.findOne({ where: { id } });
+
+      if (!project) {
+        return {
+          code: '404',
+          success: false,
+          message: `Project ${id} not found`,
+          project: null,
+        };
+      }
+
+      return {
+        code: '200',
+        success: true,
+        message: `Category ${id} deleted`,
+        project: await Project.remove(project),
       };
     }
   )

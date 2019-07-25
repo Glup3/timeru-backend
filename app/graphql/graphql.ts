@@ -28,6 +28,22 @@ export type AddPermissionMutationResponse = MutationResponse & {
   permission?: Maybe<Permission>;
 };
 
+export type AddProjectMutationResponse = MutationResponse & {
+  __typename?: 'AddProjectMutationResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  project?: Maybe<Project>;
+};
+
+export type AddUserPermissionMutationResponse = MutationResponse & {
+  __typename?: 'AddUserPermissionMutationResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  userPermission?: Maybe<UserPermission>;
+};
+
 export enum CacheControlScope {
   Public = 'PUBLIC',
   Private = 'PRIVATE',
@@ -72,6 +88,10 @@ export interface Mutation {
   addPermission?: Maybe<AddPermissionMutationResponse>;
   updatePermission?: Maybe<UpdatePermissionMutationResponse>;
   removePermission?: Maybe<RemovePermissionMutationResponse>;
+  addProject?: Maybe<AddProjectMutationResponse>;
+  updateProject?: Maybe<UpdateProjectMutationResponse>;
+  removeProject?: Maybe<RemoveProjectMutationResponse>;
+  addUserPermission?: Maybe<AddUserPermissionMutationResponse>;
 }
 
 export interface MutationRegisterArgs {
@@ -114,6 +134,23 @@ export interface MutationRemovePermissionArgs {
   id: Scalars['ID'];
 }
 
+export interface MutationAddProjectArgs {
+  project: ProjectInput;
+}
+
+export interface MutationUpdateProjectArgs {
+  id: Scalars['ID'];
+  project: ProjectInput;
+}
+
+export interface MutationRemoveProjectArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationAddUserPermissionArgs {
+  userPermissionInput: UserPermissionInput;
+}
+
 export interface MutationResponse {
   code: Scalars['String'];
   success: Scalars['Boolean'];
@@ -134,6 +171,22 @@ export interface PersonalInfoInput {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+}
+
+export interface Project {
+  __typename?: 'Project';
+  id?: Maybe<Scalars['ID']>;
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']>;
+  codename?: Maybe<Scalars['String']>;
+}
+
+export interface ProjectInput {
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']>;
+  codename?: Maybe<Scalars['String']>;
 }
 
 export interface Query {
@@ -178,6 +231,14 @@ export type RemovePermissionMutationResponse = MutationResponse & {
   permission?: Maybe<Permission>;
 };
 
+export type RemoveProjectMutationResponse = MutationResponse & {
+  __typename?: 'RemoveProjectMutationResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  project?: Maybe<Project>;
+};
+
 export type UpdateCategoryMutationResponse = MutationResponse & {
   __typename?: 'UpdateCategoryMutationResponse';
   code: Scalars['String'];
@@ -192,6 +253,14 @@ export type UpdatePermissionMutationResponse = MutationResponse & {
   success: Scalars['Boolean'];
   message: Scalars['String'];
   permission?: Maybe<Permission>;
+};
+
+export type UpdateProjectMutationResponse = MutationResponse & {
+  __typename?: 'UpdateProjectMutationResponse';
+  code: Scalars['String'];
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  project?: Maybe<Project>;
 };
 
 export type UpdateUserMutationResponse = MutationResponse & {
@@ -217,6 +286,23 @@ export interface UserInput {
   lastName?: Maybe<Scalars['String']>;
   active?: Maybe<Scalars['Boolean']>;
   role?: Maybe<Scalars['String']>;
+}
+
+export interface UserPermission {
+  __typename?: 'UserPermission';
+  id?: Maybe<Scalars['ID']>;
+  user?: Maybe<User>;
+  project?: Maybe<Project>;
+  permission?: Maybe<Permission>;
+}
+
+export interface UserPermissionInput {
+  userId?: Maybe<Scalars['ID']>;
+  username?: Maybe<Scalars['String']>;
+  projectId?: Maybe<Scalars['ID']>;
+  projectCodename?: Maybe<Scalars['String']>;
+  permissionId?: Maybe<Scalars['ID']>;
+  permissionTitle?: Maybe<Scalars['String']>;
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -301,6 +387,14 @@ export interface ResolversTypes {
   AddPermissionMutationResponse: ResolverTypeWrapper<AddPermissionMutationResponse>;
   UpdatePermissionMutationResponse: ResolverTypeWrapper<UpdatePermissionMutationResponse>;
   RemovePermissionMutationResponse: ResolverTypeWrapper<RemovePermissionMutationResponse>;
+  ProjectInput: ProjectInput;
+  AddProjectMutationResponse: ResolverTypeWrapper<AddProjectMutationResponse>;
+  Project: ResolverTypeWrapper<Project>;
+  UpdateProjectMutationResponse: ResolverTypeWrapper<UpdateProjectMutationResponse>;
+  RemoveProjectMutationResponse: ResolverTypeWrapper<RemoveProjectMutationResponse>;
+  UserPermissionInput: UserPermissionInput;
+  AddUserPermissionMutationResponse: ResolverTypeWrapper<AddUserPermissionMutationResponse>;
+  UserPermission: ResolverTypeWrapper<UserPermission>;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -331,6 +425,14 @@ export interface ResolversParentTypes {
   AddPermissionMutationResponse: AddPermissionMutationResponse;
   UpdatePermissionMutationResponse: UpdatePermissionMutationResponse;
   RemovePermissionMutationResponse: RemovePermissionMutationResponse;
+  ProjectInput: ProjectInput;
+  AddProjectMutationResponse: AddProjectMutationResponse;
+  Project: Project;
+  UpdateProjectMutationResponse: UpdateProjectMutationResponse;
+  RemoveProjectMutationResponse: RemoveProjectMutationResponse;
+  UserPermissionInput: UserPermissionInput;
+  AddUserPermissionMutationResponse: AddUserPermissionMutationResponse;
+  UserPermission: UserPermission;
   CacheControlScope: CacheControlScope;
   Upload: Scalars['Upload'];
   Int: Scalars['Int'];
@@ -361,6 +463,26 @@ export interface AddPermissionMutationResponseResolvers<
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   permission?: Resolver<Maybe<ResolversTypes['Permission']>, ParentType, ContextType>;
+}
+
+export interface AddProjectMutationResponseResolvers<
+  ContextType = any,
+  ParentType = ResolversParentTypes['AddProjectMutationResponse']
+> {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType>;
+}
+
+export interface AddUserPermissionMutationResponseResolvers<
+  ContextType = any,
+  ParentType = ResolversParentTypes['AddUserPermissionMutationResponse']
+> {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userPermission?: Resolver<Maybe<ResolversTypes['UserPermission']>, ParentType, ContextType>;
 }
 
 export interface CategoryResolvers<ContextType = any, ParentType = ResolversParentTypes['Category']> {
@@ -431,6 +553,30 @@ export interface MutationResolvers<ContextType = any, ParentType = ResolversPare
     ContextType,
     MutationRemovePermissionArgs
   >;
+  addProject?: Resolver<
+    Maybe<ResolversTypes['AddProjectMutationResponse']>,
+    ParentType,
+    ContextType,
+    MutationAddProjectArgs
+  >;
+  updateProject?: Resolver<
+    Maybe<ResolversTypes['UpdateProjectMutationResponse']>,
+    ParentType,
+    ContextType,
+    MutationUpdateProjectArgs
+  >;
+  removeProject?: Resolver<
+    Maybe<ResolversTypes['RemoveProjectMutationResponse']>,
+    ParentType,
+    ContextType,
+    MutationRemoveProjectArgs
+  >;
+  addUserPermission?: Resolver<
+    Maybe<ResolversTypes['AddUserPermissionMutationResponse']>,
+    ParentType,
+    ContextType,
+    MutationAddUserPermissionArgs
+  >;
 }
 
 export interface MutationResponseResolvers<ContextType = any, ParentType = ResolversParentTypes['MutationResponse']> {
@@ -443,7 +589,11 @@ export interface MutationResponseResolvers<ContextType = any, ParentType = Resol
     | 'UpdateUserMutationResponse'
     | 'AddPermissionMutationResponse'
     | 'UpdatePermissionMutationResponse'
-    | 'RemovePermissionMutationResponse',
+    | 'RemovePermissionMutationResponse'
+    | 'AddProjectMutationResponse'
+    | 'UpdateProjectMutationResponse'
+    | 'RemoveProjectMutationResponse'
+    | 'AddUserPermissionMutationResponse',
     ParentType,
     ContextType
   >;
@@ -455,6 +605,14 @@ export interface MutationResponseResolvers<ContextType = any, ParentType = Resol
 export interface PermissionResolvers<ContextType = any, ParentType = ResolversParentTypes['Permission']> {
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+}
+
+export interface ProjectResolvers<ContextType = any, ParentType = ResolversParentTypes['Project']> {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  color?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  codename?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 }
 
 export interface QueryResolvers<ContextType = any, ParentType = ResolversParentTypes['Query']> {
@@ -495,6 +653,16 @@ export interface RemovePermissionMutationResponseResolvers<
   permission?: Resolver<Maybe<ResolversTypes['Permission']>, ParentType, ContextType>;
 }
 
+export interface RemoveProjectMutationResponseResolvers<
+  ContextType = any,
+  ParentType = ResolversParentTypes['RemoveProjectMutationResponse']
+> {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType>;
+}
+
 export interface UpdateCategoryMutationResponseResolvers<
   ContextType = any,
   ParentType = ResolversParentTypes['UpdateCategoryMutationResponse']
@@ -513,6 +681,16 @@ export interface UpdatePermissionMutationResponseResolvers<
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   permission?: Resolver<Maybe<ResolversTypes['Permission']>, ParentType, ContextType>;
+}
+
+export interface UpdateProjectMutationResponseResolvers<
+  ContextType = any,
+  ParentType = ResolversParentTypes['UpdateProjectMutationResponse']
+> {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType>;
 }
 
 export interface UpdateUserMutationResponseResolvers<
@@ -538,23 +716,36 @@ export interface UserResolvers<ContextType = any, ParentType = ResolversParentTy
   active?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
 }
 
+export interface UserPermissionResolvers<ContextType = any, ParentType = ResolversParentTypes['UserPermission']> {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType>;
+  permission?: Resolver<Maybe<ResolversTypes['Permission']>, ParentType, ContextType>;
+}
+
 export interface Resolvers<ContextType = any> {
   AddCategoryMutationResponse?: AddCategoryMutationResponseResolvers<ContextType>;
   AddPermissionMutationResponse?: AddPermissionMutationResponseResolvers<ContextType>;
+  AddProjectMutationResponse?: AddProjectMutationResponseResolvers<ContextType>;
+  AddUserPermissionMutationResponse?: AddUserPermissionMutationResponseResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   LoginMutationResponse?: LoginMutationResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   MutationResponse?: MutationResponseResolvers;
   Permission?: PermissionResolvers<ContextType>;
+  Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RegisterMutationResponse?: RegisterMutationResponseResolvers<ContextType>;
   RemoveCategoryMutationResponse?: RemoveCategoryMutationResponseResolvers<ContextType>;
   RemovePermissionMutationResponse?: RemovePermissionMutationResponseResolvers<ContextType>;
+  RemoveProjectMutationResponse?: RemoveProjectMutationResponseResolvers<ContextType>;
   UpdateCategoryMutationResponse?: UpdateCategoryMutationResponseResolvers<ContextType>;
   UpdatePermissionMutationResponse?: UpdatePermissionMutationResponseResolvers<ContextType>;
+  UpdateProjectMutationResponse?: UpdateProjectMutationResponseResolvers<ContextType>;
   UpdateUserMutationResponse?: UpdateUserMutationResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
+  UserPermission?: UserPermissionResolvers<ContextType>;
 }
 
 /**
