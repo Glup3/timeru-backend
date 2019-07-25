@@ -9,6 +9,11 @@ const project = gql`
     codename: String
   }
 
+  extend type Query {
+    projects: [Project]
+    project(id: ID, codename: String): Project
+  }
+
   extend type Mutation {
     addProject(project: ProjectInput!): AddProjectMutationResponse
     updateProject(id: ID!, project: ProjectInput!): UpdateProjectMutationResponse
