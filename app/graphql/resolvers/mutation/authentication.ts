@@ -1,11 +1,14 @@
 import * as bcrypt from 'bcryptjs';
 import * as yup from 'yup';
+import jsonwebtoken from 'jsonwebtoken';
 
 import User from '../../../entity/User';
-import formatYupError from '../../../utils/formatYupError';
 import MutationResponse from '../../../types/mutationResponse';
-import { createTokens } from '../../../auth';
 import { MutationLoginArgs, MutationRegisterArgs } from '../../graphql';
+
+interface LoginMutationResponse extends MutationResponse {
+  token: string;
+}
 
 const registerPersonalInfoSchema = yup.object().shape({
   firstName: yup.string().required(),
@@ -31,28 +34,29 @@ const registerCredentialsSchema = yup.object().shape({
 export const register = async (
   _: any,
   { credentials, personalInfo }: MutationRegisterArgs
-): Promise<MutationResponse[]> => {
+): Promise<MutationResponse> => {
   const { email, password } = credentials;
   const { firstName, lastName, username } = personalInfo;
-  const yupErrors: MutationResponse[] = [];
 
   try {
     await registerCredentialsSchema.validate(credentials, { abortEarly: false });
   } catch (errors) {
-    yupErrors.push(...formatYupError(errors));
+    return {
+      code: '400',
+      success: false,
+      message: errors.inner[0].message,
+    };
   }
 
   try {
     await registerPersonalInfoSchema.validate(personalInfo, { abortEarly: false });
   } catch (errors) {
-    yupErrors.push(...formatYupError(errors));
+    return {
+      code: '400',
+      success: false,
+      message: errors.inner[0].message,
+    };
   }
-
-  if (yupErrors.length > 0) {
-    return yupErrors;
-  }
-
-  const errors: MutationResponse[] = [];
 
   const emailAlreadyExists = await User.findOne({
     where: { email },
@@ -60,11 +64,11 @@ export const register = async (
   });
 
   if (emailAlreadyExists) {
-    errors.push({
+    return {
       code: '400',
-      message: 'email is already taken',
       success: false,
-    });
+      message: 'email is already taken',
+    };
   }
 
   const usernameAlreadyExists = await User.findOne({
@@ -73,15 +77,11 @@ export const register = async (
   });
 
   if (usernameAlreadyExists) {
-    errors.push({
+    return {
       code: '400',
-      message: 'username is already taken',
       success: false,
-    });
-  }
-
-  if (errors.length > 0) {
-    return errors;
+      message: 'username is already taken',
+    };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -96,24 +96,23 @@ export const register = async (
 
   await user.save();
 
-  return [
-    {
-      code: '200',
-      message: 'successfully registered',
-      success: true,
-    },
-  ];
+  return {
+    code: '200',
+    message: 'successfully registered',
+    success: true,
+  };
 };
 
-export const login = async (_: any, { credentials }: MutationLoginArgs, { res }: any): Promise<MutationResponse> => {
+export const login = async (_: any, { credentials }: MutationLoginArgs): Promise<LoginMutationResponse> => {
   const { email, password } = credentials;
 
   const user = await User.findOne({ where: { email } });
 
-  const errorResponse: MutationResponse = {
+  const errorResponse: LoginMutationResponse = {
     code: '400',
     message: 'invalid email or password',
     success: false,
+    token: null,
   };
 
   if (!user) {
@@ -130,34 +129,16 @@ export const login = async (_: any, { credentials }: MutationLoginArgs, { res }:
       code: '400',
       success: false,
       message: 'user account disabled',
+      token: null,
     };
   }
-
-  const { refreshToken, accessToken } = createTokens(user);
-
-  res.cookie('refresh-token', refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 7 });
-  res.cookie('access-token', accessToken, { maxAge: 1000 * 60 * 15 });
 
   return {
     code: '200',
     message: 'successfully logged in',
     success: true,
+    token: jsonwebtoken.sign({ id: user.id, count: user.count, role: user.role }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    }),
   };
-};
-
-// TODO create another for Admin, invalid Tokens for other Users
-export const invalidateTokens = async (_: any, __: any, { req }: any): Promise<boolean> => {
-  if (!req.userId) {
-    return false;
-  }
-
-  const user = await User.findOne(req.userId);
-  if (!user) {
-    return false;
-  }
-
-  user.count += 1;
-  await user.save();
-
-  return true;
 };

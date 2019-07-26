@@ -14,7 +14,7 @@ export const createTokens = (user: User): { refreshToken: string; accessToken: s
 };
 
 export const authenticated = (next: any): any => (root: any, args: any, context: any, info: any): any => {
-  if (!context.req.userId) {
+  if (!context.req.user.id) {
     throw new Error('Unauthenticated!');
   }
 
@@ -27,7 +27,7 @@ export const validateRole = (role: string): any => (next: any): any => (
   context: any,
   info: any
 ): any => {
-  if (context.req.role !== role && context.req.role !== ROLE_ADMIN) {
+  if (context.req.user.role !== role && context.req.user.role !== ROLE_ADMIN) {
     throw new Error('Unauthorized!');
   }
 

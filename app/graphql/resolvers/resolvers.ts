@@ -6,7 +6,7 @@ import { me, updateUser } from './mutation/user';
 import { addCategory, removeCategory, updateCategory } from './mutation/category';
 import { addPermission, updatePermission, removePermission } from './mutation/permission';
 import { addProject, updateProject, removeProject } from './mutation/project';
-import { register, login, invalidateTokens } from './mutation/authentication';
+import { register, login } from './mutation/authentication';
 import { addUserPermission } from './mutation/userPermission';
 
 const resolvers = {
@@ -22,7 +22,6 @@ const resolvers = {
   Mutation: {
     register,
     login,
-    invalidateTokens,
     addCategory,
     removeCategory,
     updateCategory,

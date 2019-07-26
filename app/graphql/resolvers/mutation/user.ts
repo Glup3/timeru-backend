@@ -8,7 +8,7 @@ interface UserMutationResponse extends MutationResponseType {
   user: User;
 }
 
-export const me = authenticated(async (_: any, __: any, { req }: any): Promise<User> => User.findOne(req.userId));
+export const me = authenticated(async (_: any, __: any, { req }: any): Promise<User> => User.findOne(req.user.id));
 
 export const updateUser = authenticated(
   validateRole(ROLE_ADMIN)(

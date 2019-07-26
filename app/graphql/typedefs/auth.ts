@@ -15,6 +15,7 @@ const auth = gql`
     code: String!
     success: Boolean!
     message: String!
+    token: String
   }
 
   type RegisterMutationResponse implements MutationResponse {
