@@ -6,7 +6,7 @@ const auth = gql`
   }
 
   extend type Mutation {
-    register(credentials: CredentialsInput!, personalInfo: PersonalInfoInput!): [RegisterMutationResponse]
+    register(credentials: CredentialsInput!, personalInfo: PersonalInfoInput!): RegisterMutationResponse
     login(credentials: CredentialsInput!): LoginMutationResponse
     invalidateTokens: Boolean
   }
