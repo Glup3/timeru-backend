@@ -4,7 +4,7 @@ import { Kind } from 'graphql/language';
 import { categories, category } from './query/category';
 import { permissions, permission } from './query/permission';
 import { projects, project } from './query/project';
-import { timeEntries } from './query/timeEntry';
+import { timeEntries, isTimerRunning } from './query/timeEntry';
 
 import { me, updateUser } from './mutation/user';
 import { addCategory, removeCategory, updateCategory } from './mutation/category';
@@ -24,6 +24,7 @@ const resolvers = {
     projects,
     project,
     timeEntries,
+    isTimerRunning,
   },
   Mutation: {
     register,

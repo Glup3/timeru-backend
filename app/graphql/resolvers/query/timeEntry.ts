@@ -3,6 +3,7 @@ import TimeEntry from '../../../entity/TimeEntry';
 import { ROLE_USER } from '../../../constants';
 import { validateRole, authenticated } from '../../../auth';
 import User from '../../../entity/User';
+import { getRunningTimer } from '../mutation/timeEntry';
 
 export const timeEntries = authenticated(
   validateRole(ROLE_USER)(async (_: any, { start, end }: any, { req }: any) => {
@@ -19,4 +20,11 @@ export const timeEntries = authenticated(
   })
 );
 
-export const temp = () => null;
+export const isTimerRunning = authenticated(
+  validateRole(ROLE_USER)(async (_: any, __: any, { req }: any) => {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    const timer = await getRunningTimer(user);
+
+    return !!timer;
+  })
+);

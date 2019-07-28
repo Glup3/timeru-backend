@@ -16,6 +16,7 @@ const timeEntry = gql`
 
   extend type Query {
     timeEntries(start: Date!, end: Date!): [TimeEntry]
+    isTimerRunning: Boolean
   }
 
   extend type Mutation {
