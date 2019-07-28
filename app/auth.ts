@@ -14,7 +14,7 @@ export const createTokens = (user: User): { refreshToken: string; accessToken: s
 };
 
 export const authenticated = (next: any): any => (root: any, args: any, context: any, info: any): any => {
-  if (!context.req.user.id) {
+  if (!context.req.user || !context.req.user.id) {
     throw new Error('Unauthenticated!');
   }
 

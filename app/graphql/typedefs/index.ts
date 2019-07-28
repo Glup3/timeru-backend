@@ -6,7 +6,8 @@ import user from './user';
 import permission from './permission';
 import project from './project';
 import userPermission from './userPermission';
+import timeEntry from './timeEntry';
 
-const schemaArray = [auth, category, root, shared, user, permission, project, userPermission];
+const schemaArray = [auth, category, root, shared, user, permission, project, userPermission, timeEntry];
 
 export default schemaArray;

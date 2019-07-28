@@ -7,15 +7,15 @@ import User from './User';
 export default class TimeEntry extends BaseEntity {
   @PrimaryGeneratedColumn() public id: number;
 
-  @Column('varchar', { length: 60 }) public title: string;
+  @Column('varchar', { length: 60, nullable: true }) public title: string;
 
-  @Column('varchar') public description: string;
+  @Column('varchar', { nullable: true }) public description: string;
 
-  @Column('datetime') public start: Date;
+  @Column('datetime', { nullable: false }) public start: Date;
 
-  @Column('datetime') public end: Date;
+  @Column('datetime', { nullable: true }) public end: Date;
 
-  @Column('int', { comment: 'in seconds' }) public duration: number;
+  @Column('int', { comment: 'in seconds', nullable: true }) public duration: number;
 
   @Column('boolean') public valuable: boolean;
 
