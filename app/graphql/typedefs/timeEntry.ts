@@ -14,6 +14,10 @@ const timeEntry = gql`
     category: Category
   }
 
+  extend type Query {
+    timeEntries(start: Date!, end: Date!): [TimeEntry]
+  }
+
   extend type Mutation {
     startTimer(timerInput: StartTimerInput!): StartTimerMutationResponse
     stopTimer(end: Date!): StopTimerMutationResponse
