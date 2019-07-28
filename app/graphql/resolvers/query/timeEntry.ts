@@ -9,9 +9,12 @@ export const timeEntries = authenticated(
     const user = await User.findOne({ where: { id: req.user.id } });
 
     return TimeEntry.find({
-      start: MoreThanOrEqual(start),
-      end: LessThanOrEqual(end),
-      user,
+      where: {
+        start: MoreThanOrEqual(start),
+        end: LessThanOrEqual(end),
+        user,
+      },
+      relations: ['project', 'category'],
     });
   })
 );
