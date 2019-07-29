@@ -10,8 +10,8 @@ interface TimeEntryMutationResponse extends MutationResponseType {
   timeEntry: TimeEntry;
 }
 
-export const getRunningTimer = (user: User) => {
-  return TimeEntry.findOne({ where: { end: null, user } });
+export const getRunningTimer = (user: User, relations?: string[]) => {
+  return TimeEntry.findOne({ where: { end: null, user }, relations });
 };
 
 export const startTimer = authenticated(

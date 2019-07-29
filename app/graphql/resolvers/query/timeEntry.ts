@@ -1,4 +1,4 @@
-import { MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
+import { MoreThanOrEqual, LessThanOrEqual, IsNull } from 'typeorm';
 import TimeEntry from '../../../entity/TimeEntry';
 import { ROLE_USER } from '../../../constants';
 import { validateRole, authenticated } from '../../../auth';
@@ -8,15 +8,24 @@ import { getRunningTimer } from '../mutation/timeEntry';
 export const timeEntries = authenticated(
   validateRole(ROLE_USER)(async (_: any, { start, end }: any, { req }: any) => {
     const user = await User.findOne({ where: { id: req.user.id } });
+    const relations = ['project', 'category'];
 
-    return TimeEntry.find({
+    const entries = await TimeEntry.find({
       where: {
         start: MoreThanOrEqual(start),
         end: LessThanOrEqual(end),
         user,
       },
-      relations: ['project', 'category'],
+      relations,
     });
+
+    const timer = await getRunningTimer(user, relations);
+
+    if (timer) {
+      entries.push(timer);
+    }
+
+    return entries;
   })
 );
 
