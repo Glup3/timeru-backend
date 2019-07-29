@@ -21,7 +21,7 @@ const timeEntry = gql`
 
   extend type Mutation {
     startTimer(timerInput: StartTimerInput!): StartTimerMutationResponse
-    stopTimer(end: Date!): StopTimerMutationResponse
+    stopTimer: StopTimerMutationResponse
   }
 
   type StartTimerMutationResponse implements MutationResponse {
@@ -39,7 +39,6 @@ const timeEntry = gql`
   }
 
   input StartTimerInput {
-    start: Date
     title: String
     description: String
     valuable: Boolean

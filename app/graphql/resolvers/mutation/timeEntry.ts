@@ -29,7 +29,7 @@ export const startTimer = authenticated(
         };
       }
 
-      const { start, title, description, valuable, projectId, categoryId } = timerInput;
+      const { title, description, valuable, projectId, categoryId } = timerInput;
 
       const project = await Project.findOne({ relations: ['timeEntries'], where: { id: projectId } });
       const category = await Category.findOne({ relations: ['timeEntries'], where: { id: categoryId } });
@@ -37,7 +37,7 @@ export const startTimer = authenticated(
       const entry = TimeEntry.create({
         title,
         description,
-        start,
+        start: new Date(),
         end: null,
         duration: null,
         valuable: valuable || false,
@@ -82,9 +82,10 @@ export const startTimer = authenticated(
 
 export const stopTimer = authenticated(
   validateRole(ROLE_USER)(
-    async (_: any, { end }: any, { req }: any): Promise<TimeEntryMutationResponse> => {
+    async (_: any, __: any, { req }: any): Promise<TimeEntryMutationResponse> => {
       const user = await User.findOne({ where: { id: req.user.id } });
       const timer = await getRunningTimer(user);
+      const end = new Date();
 
       if (!timer) {
         return {
@@ -99,7 +100,7 @@ export const stopTimer = authenticated(
         return {
           code: '400',
           success: false,
-          message: "end can't be greater than start",
+          message: "end time can't be before start time",
           timeEntry: timer,
         };
       }
