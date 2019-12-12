@@ -1,10 +1,9 @@
 import User from '../../../entity/User';
 import { authenticated, validateRole } from '../../../auth';
 import { ROLE_ADMIN } from '../../../constants';
-import MutationResponseType from '../../../types/mutationResponse';
 import { MutationUpdateUserArgs } from '../../graphql';
 
-interface UserMutationResponse extends MutationResponseType {
+interface UserMutationResponse extends MutationResponse {
   user: User;
 }
 

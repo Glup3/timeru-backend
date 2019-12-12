@@ -1,5 +1,4 @@
 import { ValidationError } from 'yup';
-import MutationResponse from '../types/mutationResponse';
 
 const formatYupError = (error: ValidationError): MutationResponse[] => {
   const errors: MutationResponse[] = [];

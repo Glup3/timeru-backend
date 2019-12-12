@@ -1,12 +1,11 @@
 import { authenticated, validateRole } from '../../../auth';
 import { ROLE_USER } from '../../../constants';
-import MutationResponseType from '../../../types/mutationResponse';
 import TimeEntry from '../../../entity/TimeEntry';
 import Project from '../../../entity/Project';
 import Category from '../../../entity/Category';
 import User from '../../../entity/User';
 
-interface TimeEntryMutationResponse extends MutationResponseType {
+interface TimeEntryMutationResponse extends MutationResponse {
   timeEntry: TimeEntry;
 }
 

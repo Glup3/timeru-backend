@@ -3,10 +3,9 @@ import * as yup from 'yup';
 import { authenticated, validateRole } from '../../../auth';
 import { ROLE_ADMIN } from '../../../constants';
 import Project from '../../../entity/Project';
-import MutationResponseType from '../../../types/mutationResponse';
 import { MutationRemoveProjectArgs, MutationUpdateProjectArgs, MutationAddProjectArgs } from '../../graphql';
 
-interface ProjectMutationResponse extends MutationResponseType {
+interface ProjectMutationResponse extends MutationResponse {
   project: Project;
 }
 

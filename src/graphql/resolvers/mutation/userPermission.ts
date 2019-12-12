@@ -1,15 +1,15 @@
 import User from '../../../entity/User';
 import { authenticated, validateRole } from '../../../auth';
 import { ROLE_ADMIN } from '../../../constants';
-import MutationResponseType from '../../../types/mutationResponse';
 import UserPermission from '../../../entity/UserPermission';
 import Project from '../../../entity/Project';
 import Permission from '../../../entity/Permission';
 
-interface UserPermissionMutationResponse extends MutationResponseType {
+interface UserPermissionMutationResponse extends MutationResponse {
   userPermission: UserPermission;
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export const addUserPermission = authenticated(
   validateRole(ROLE_ADMIN)(
     async (_: any, { userPermissionInput }: any): Promise<UserPermissionMutationResponse> => {
@@ -115,5 +115,3 @@ export const addUserPermission = authenticated(
     }
   )
 );
-
-export const temp = () => null;

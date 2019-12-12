@@ -1,4 +1,4 @@
-export default interface ErrorType {
+interface Error {
   path: string;
   message: string;
 }

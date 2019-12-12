@@ -2,11 +2,11 @@ import * as yup from 'yup';
 
 import { authenticated, validateRole } from '../../../auth';
 import { ROLE_ADMIN } from '../../../constants';
-import MutationResponseType from '../../../types/mutationResponse';
+
 import Permission from '../../../entity/Permission';
 import { MutationAddPermissionArgs, MutationUpdatePermissionArgs, MutationRemovePermissionArgs } from '../../graphql';
 
-interface PermissionMutationResponse extends MutationResponseType {
+interface PermissionMutationResponse extends MutationResponse {
   permission: Permission;
 }
 

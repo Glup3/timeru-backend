@@ -3,7 +3,6 @@ import * as yup from 'yup';
 import jsonwebtoken from 'jsonwebtoken';
 
 import User from '../../../entity/User';
-import MutationResponse from '../../../types/mutationResponse';
 import { MutationLoginArgs, MutationRegisterArgs } from '../../graphql';
 
 interface LoginMutationResponse extends MutationResponse {

@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "tsc": "tsc",
+    "start": "npm run dev",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
     "prod": "tsc && node ./build/index.js",
     "codegen": "graphql-codegen --config codegen.yml",
