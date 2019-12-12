@@ -7,15 +7,24 @@ import Permission from './Permission';
 export default class UserPermission extends BaseEntity {
   @PrimaryGeneratedColumn() public id: number;
 
-  @ManyToOne(type => User, user => user.userPermissions)
+  @ManyToOne(
+    type => User,
+    user => user.userPermissions
+  )
   @JoinColumn({ name: 'user_id' })
   public user: User;
 
-  @ManyToOne(type => Project, project => project.userPermissions)
+  @ManyToOne(
+    type => Project,
+    project => project.userPermissions
+  )
   @JoinColumn({ name: 'project_id' })
   public project: Project;
 
-  @ManyToOne(type => Permission, permission => permission.userPermissions)
+  @ManyToOne(
+    type => Permission,
+    permission => permission.userPermissions
+  )
   @JoinColumn({ name: 'permission_id' })
   public permission: Permission;
 }

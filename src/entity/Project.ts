@@ -14,9 +14,15 @@ export default class Project extends BaseEntity {
 
   @Column('varchar', { length: 30, unique: true, nullable: false }) public codename: string;
 
-  @OneToMany(type => TimeEntry, timeEntry => timeEntry.project)
+  @OneToMany(
+    type => TimeEntry,
+    timeEntry => timeEntry.project
+  )
   public timeEntries: TimeEntry[];
 
-  @OneToMany(type => UserPermission, userPermission => userPermission.project)
+  @OneToMany(
+    type => UserPermission,
+    userPermission => userPermission.project
+  )
   public userPermissions: UserPermission[];
 }

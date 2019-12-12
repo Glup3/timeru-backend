@@ -11,6 +11,9 @@ export default class Category extends BaseEntity {
 
   @Column('boolean', { default: false }) public valuable: boolean;
 
-  @OneToMany(type => TimeEntry, timeEntry => timeEntry.category)
+  @OneToMany(
+    type => TimeEntry,
+    timeEntry => timeEntry.category
+  )
   public timeEntries: TimeEntry[];
 }

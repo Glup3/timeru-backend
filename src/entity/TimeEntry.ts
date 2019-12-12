@@ -19,15 +19,24 @@ export default class TimeEntry extends BaseEntity {
 
   @Column('boolean') public valuable: boolean;
 
-  @ManyToOne(type => User, user => user.timeEntries)
+  @ManyToOne(
+    type => User,
+    user => user.timeEntries
+  )
   @JoinColumn({ name: 'user_id' })
   public user: User;
 
-  @ManyToOne(type => Project, project => project.timeEntries)
+  @ManyToOne(
+    type => Project,
+    project => project.timeEntries
+  )
   @JoinColumn({ name: 'project_id' })
   public project: Project;
 
-  @ManyToOne(type => Category, category => category.timeEntries)
+  @ManyToOne(
+    type => Category,
+    category => category.timeEntries
+  )
   @JoinColumn({ name: 'category_id' })
   public category: Category;
 }

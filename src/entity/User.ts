@@ -22,9 +22,15 @@ export default class User extends BaseEntity {
 
   @Column('text') public password: string;
 
-  @OneToMany(type => TimeEntry, timeEntry => timeEntry.user)
+  @OneToMany(
+    type => TimeEntry,
+    timeEntry => timeEntry.user
+  )
   public timeEntries: TimeEntry[];
 
-  @OneToMany(type => UserPermission, userPermission => userPermission.user)
+  @OneToMany(
+    type => UserPermission,
+    userPermission => userPermission.user
+  )
   public userPermissions: UserPermission[];
 }
